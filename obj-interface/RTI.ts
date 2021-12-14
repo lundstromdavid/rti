@@ -6,17 +6,17 @@ import {
   RTINumberValidation,
   RTIStringValidation,
 } from "./object-types/ValidationTypes";
-import { TRTIInterface } from "./types/TRTIInterface";
-import { TRTIObject } from "./types/TRTiObject";
+import { RTInterface } from "./types/RTInterface";
+import { TRTIObject } from "./types/TRTIObject";
 import { MUtils } from "./utils/MUtils";
 
-type TRTI<T extends TRTIInterface> = {
+type TRTI<T extends RTInterface> = {
   [key in keyof T as SanitizedKey<key>]: T[key];
 };
 
 type SanitizedKey<K> = K extends `${infer pre}?${infer rest}` ? pre : K;
 
-export class RTI<T extends TRTIInterface> {
+export class RTI<T extends RTInterface> {
   private readonly objects = {};
 
   constructor(objects: TRTI<T>) {
@@ -32,7 +32,7 @@ export class RTI<T extends TRTIInterface> {
     });
   }
 
-  static create<T extends TRTIInterface>(obj: TRTI<T>) {
+  static create<T extends RTInterface>(obj: TRTI<T>) {
     return new RTI(obj);
   }
 
@@ -44,7 +44,7 @@ export class RTI<T extends TRTIInterface> {
   }
 }
 
-class RTIValidated<T extends TRTIInterface> {
+class RTIValidated<T extends RTInterface> {
   constructor(
     private props: {
       objects: TRTI<T>;

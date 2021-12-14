@@ -1,20 +1,20 @@
-import { assert } from "console";
-import { asArray } from "../../utility/ArrayUtility";
+import { RTIStringValidation, RTIUnchecked } from "../object-types/ValidationTypes";
+import assert from "../utils/Assert";
+import { MUtils } from "../utils/MUtils";
 import { AbsRTIType } from "./AbsRTIType";
 import { TRTIValidation } from "./ValidationTypes";
 
-export class RTIString extends AbsRTIType {
+export class RTIString extends AbsRTIType<RTIStringValidation> {
 
-    private readonly type = "RTIString";
-    private _minLength?: number = undefined;
-    private _maxLength?: number = undefined;
-    private _contains?: string[] = undefined;
-
+    private readonly discriminator = "RTIString";
+    private pMinLength?: number = undefined;
+    private pMaxLength?: number = undefined;
+    private pContains?: string[] = undefined;
 
     public minLength(min: number): RTIString {
-    	this._minLength = min;
-    	if (typeof this._maxLength === "number") {
-    		assert(this._minLength < this._maxLength, 
+    	this.pMinLength = min;
+    	if (typeof this.pMaxLength === "number") {
+    		assert(this.pMinLength < this.pMaxLength, 
     			"Creating an RTIString with a min length equal to or larger than the max length does not make sense");
     	}
     	return this;
@@ -22,9 +22,9 @@ export class RTIString extends AbsRTIType {
     }
 
     public maxLength(max: number): RTIString {
-    	this._maxLength = max;
-    	if (typeof this._minLength === "number") {
-    		assert(this._minLength < this._maxLength, 
+    	this.pMaxLength = max;
+    	if (typeof this.pMinLength === "number") {
+    		assert(this.pMinLength < this.pMaxLength, 
     			"Creating an RTIString with a min length equal to or larger than the max length does not make sense");
     	}
     	return this;
@@ -35,18 +35,67 @@ export class RTIString extends AbsRTIType {
     }
 
     public contains(values: string | string[]): RTIString {
-    	this._contains = asArray(values);
+    	this.pContains = MUtils.asArray(values);
     	return this;
     }
 
-    public validate(value: any): TRTIValidation {
-    	return {
-    		type: this.type,
-    		passed: true,
-    		longEnough: true,
-    		notTooLong: true,
-    		containsAllProvidedValues: true
-    	};
+	private default(passed: boolean, correctType: RTIStringValidation["correctType"]): RTIStringValidation {
+		return {
+			discriminator: this.discriminator,
+			passed,
+			correctType,
+			longEnough: RTIUnchecked,
+			notTooLong: RTIUnchecked,
+			containsAllProvidedValues: RTIUnchecked
+		};
+	}
+
+	private merge(passed: boolean, correctType: RTIStringValidation["correctType"], partial: Partial<RTIStringValidation> = {}): RTIStringValidation {
+		return Object.assign(this.default(passed, correctType), partial);		
+	}
+
+	private mergeSuccess(partial: Partial<RTIStringValidation>) {
+		return Object.assign(this.default(true, true), partial);
+	}
+
+	private longEnough(str: string): boolean {
+		return this.pMinLength === undefined || str.length >= this.pMinLength;
+	}
+
+	private notTooLong(str: string): boolean {
+		return this.pMaxLength === undefined || str.length <= this.pMaxLength;
+	}
+
+    public validate(value: any): RTIStringValidation {
+		
+		if (typeof value !== "string") {
+			return this.merge(false, {
+				expected: "string",
+				actual: typeof value
+			});
+		} else {
+			
+			const partial: Partial<RTIStringValidation> = {
+				longEnough: this.longEnough(value),
+				notTooLong: this.notTooLong(value),
+			};
+			const len = value.length;
+			partial.longEnough =  
+
+			return {
+				discriminator: this.discriminator,
+				passed: true,
+				correctType: true,
+				longEnough: true,
+				notTooLong: true,
+				containsAllProvidedValues: true
+			};
+
+
+		}
+		
+
+    	
     }
 
 

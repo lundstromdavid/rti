@@ -1,10 +1,10 @@
 import { TRTIValidation } from "./ValidationTypes";
 
-export abstract class AbsRTIType<T extends TRTIValidation> {
+export abstract class AbsRTIType {
     
     private _optional = false;
     
-    abstract validate(value: any): T;
+    abstract validate(value: any): TRTIValidation;
 
     optional(): this {
     	this._optional = true;
