@@ -2,13 +2,13 @@
 export const RTIUnchecked: TRTIUnchecked = "unchecked";
 export type TRTIUnchecked = "unchecked";
 
-type CorrectType<Expected extends string> = true | {
+export type CorrectType<Expected extends string> = true | {
     expected: Expected;
     actual: string;
 };
 
 
-export type RTIStringValidation = {
+export interface RTIStringValidation {
     discriminator: "RTIString",
     passed: boolean;
     correctType: CorrectType<"string">;
@@ -16,6 +16,7 @@ export type RTIStringValidation = {
     notTooLong: boolean | TRTIUnchecked;
     // Need to establish and/or relation
     containsAllProvidedValues: boolean | TRTIUnchecked;
+    containsAtLeastOneProvidedValue: boolean | TRTIUnchecked;
 }
 
 export type RTINumberValidation = {

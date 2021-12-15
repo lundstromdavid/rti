@@ -2,17 +2,17 @@ import { TRTIValidation } from "./ValidationTypes";
 
 export abstract class AbsRTIType<T extends TRTIValidation> {
     
-    private _optional = false;
+    private pOptional = false;
     
     abstract validate(value: any): T;
 
     optional(): this {
-    	this._optional = true;
+    	this.pOptional = true;
     	return this;
     }
 
     isOptional() {
-    	return this._optional;
+    	return this.pOptional;
     }
     
 }
