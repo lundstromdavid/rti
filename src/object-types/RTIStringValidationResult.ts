@@ -24,20 +24,25 @@ export class RTIStringValidationResult implements RTIStringValidation {
     private readonly args: RTIStringProps
   ) {
     this.correctType = this.checkCorrectType();
-	if (this.correctType === true) {
-		this.longEnough = this.checkLongEnough();
-		this.notTooLong = this.checkNotTooLong();
-		this.containsAllProvidedValues = this.checkContainsAll();
-		this.containsAtLeastOneProvidedValue = this.checkContainsSome();
-	}
+    if (this.correctType === true) {
+      this.longEnough = this.checkLongEnough();
+      this.notTooLong = this.checkNotTooLong();
+      this.containsAllProvidedValues = this.checkContainsAll();
+      this.containsAtLeastOneProvidedValue = this.checkContainsSome();
+      this.passed = [
+        this.longEnough,
+        this.notTooLong,
+        this.containsAllProvidedValues,
+        this.containsAtLeastOneProvidedValue,
+      ].every((val) => val !== false);
+    }
   }
 
   private checkCorrectType(): CorrectType<"string"> {
     if (typeof this.value === "string") {
-		this.confirmedValue = this.value as string;
-		return true;
-	}
-    else
+      this.confirmedValue = this.value as string;
+      return true;
+    } else
       return {
         expected: "string",
         actual: typeof this.value,
@@ -53,11 +58,17 @@ export class RTIStringValidationResult implements RTIStringValidation {
     return isNull(maxLength) || this.confirmedValue.length <= maxLength;
   }
   private checkContainsAll(): boolean {
-	  const {containsAll} = this.args;
-	  return isNull(containsAll) || containsAll.every(val => this.confirmedValue.includes(val));
+    const { containsAll } = this.args;
+    return (
+      isNull(containsAll) ||
+      containsAll.every((val) => this.confirmedValue.includes(val))
+    );
   }
   private checkContainsSome(): boolean {
-	const {containsSome} = this.args;
-	return isNull(containsSome) || containsSome.some(val => this.confirmedValue.includes(val));
-}
+    const { containsSome } = this.args;
+    return (
+      isNull(containsSome) ||
+      containsSome.some((val) => this.confirmedValue.includes(val))
+    );
+  }
 }

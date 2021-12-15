@@ -46,10 +46,10 @@ class RTIValidated<T extends RTInterface> {
     }
 
     MUtils.entries(objects).forEach(([key, rtiObj]) => {
-      if (!(key.toString() in valuesToValidate)) {
+      if (!(key in valuesToValidate)) {
         if (!rtiObj.isOptional()) {
-          throw new Error("xd");
-        } else return;
+          throw new Error("Required entry not included");
+        }
       }
 
       const val = valuesToValidate[key];
@@ -57,7 +57,7 @@ class RTIValidated<T extends RTInterface> {
       const validation = rtiObj.validate(val);
 
       if (!validation.passed) {
-        throw new Error("asdksajkd");
+        throw new Error("Validation failed to pass");
       }
     });
   }
