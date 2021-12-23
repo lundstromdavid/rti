@@ -12,9 +12,10 @@ type Truthy<T> = T extends null
   ? never
   : T;
 
-function assert<T>(obj: T, message?: string): Truthy<T> {
+function assert<T>(obj: T, message?: string | Error): Truthy<T> {
 
 	if (isNull(obj) || !obj) {
+		if (message instanceof Error) throw message;
 		throw new AssertionError(message);
 	}
 
