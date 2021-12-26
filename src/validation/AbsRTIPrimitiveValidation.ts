@@ -1,54 +1,35 @@
 import {
-  RTIBooleanValidation,
-  RTINumberValidation,
-  RTIStringValidation, TRTIUnchecked, TypeConfirmation
+  RTIUnchecked, TRTIUnchecked,
+  TTypeConfirmation
 } from "../object-types/ValidationTypes";
-import { TPrimitive } from "../types/Primitive";
+import { TPrimitive, TPrimitiveToString } from "../types/Primitive";
 
-type CustomValidationCallback<T extends TPrimitive> = (value: T) => boolean;
+export type TCustomValidationCallback<T extends TPrimitive> = (value: T) => boolean;
 
-type PrimitiveToValidation<T extends TPrimitive> = T extends string
-  ? RTIStringValidation
-  : T extends number
-  ? RTINumberValidation
-  : RTIBooleanValidation;
+export class PrimitiveValidator<T extends TPrimitive> {
+  readonly passed: boolean;
+  readonly typeConfirmation: TTypeConfirmation<T>;
+  readonly customValidationPassed: boolean | TRTIUnchecked = RTIUnchecked;
 
-export abstract class AbsRTIPrimitiveValidation<T extends TPrimitive> {
-  protected readonly validatedType: T;
-  private passed: boolean;
-  private customValidationPassed: boolean | TRTIUnchecked = "unchecked";
-  protected readonly typeConfirmation: TypeConfirmation<T>;
-  protected readonly validation: Omit<
-    PrimitiveToValidation<T>,
-    "passed" | "correctType" | "customValidation"
-  >;
-  protected customValidationCallback: CustomValidationCallback<T>;
-
-  constructor(protected readonly object: any) {
-    this.typeConfirmation = this.validateType(object);
-    if (this.typeConfirmation == true) {
-      this.validatedType = object;
-      this.customValidationPassed = this.customValidationCallback(this.validatedType);
-      this.passed = this.performChecks();
-    } else {
+  constructor(
+    object: any,
+    expected: TPrimitiveToString<T>,
+    customValidation?: TCustomValidationCallback<T>
+  ) {
+    const actual = typeof object;
+    if (actual !== expected) {
       this.passed = false;
+      this.typeConfirmation = {
+        actual,
+        expected,
+      };
+    } else {
+      if (customValidation) {
+        this.customValidationPassed = customValidation(object as T);
+        this.passed = this.customValidationPassed;
+      } else {
+        this.passed = true;
+      }
     }
-  }
-
-  protected abstract validateType(object: any): TypeConfirmation<T>;
-  protected abstract performChecks(): boolean;
-  public get results(): PrimitiveToValidation<T> {
-   const combined: PrimitiveToValidation<T> = {
-      ...this.validation,
-      passed: this.passed,
-      correctType: this.typeConfirmation,
-      customValidationPassed: this.customValidationPassed
-    } as PrimitiveToValidation<T>; // Why is this cast needed? 
-
-    return combined;
-  }
-
-  public custom(callback: CustomValidationCallback<T>) {
-    this.customValidationCallback = callback;
   }
 }

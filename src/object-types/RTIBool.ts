@@ -1,16 +1,15 @@
-import { RTIBooleanValidation } from "../object-types/ValidationTypes";
 import { AbsRTIType } from "./AbsRTIType";
-import { TRTIValidation } from "./ValidationTypes";
+import { TBooleanValidation } from "./ValidationTypes";
 
-export class RTIBool extends AbsRTIType<RTIBooleanValidation> {
+export class RTIBool extends AbsRTIType<boolean> {
+  private readonly type = "boolean";
 
-    private readonly type = "RTIBoolean";
-
-    validate(value: any): RTIBooleanValidation {
-    	return {
-    		discriminator: this.type,
-			correctType: true,
-    		passed: typeof value === "boolean"
-    	};
-    }
+  validate(value: any): TBooleanValidation {
+    return {
+      discriminator: this.type,
+      customValidationPassed: false,
+      correctType: true,
+      passed: typeof value === "boolean",
+    };
+  }
 }

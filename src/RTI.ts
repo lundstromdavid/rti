@@ -1,11 +1,8 @@
 import { RTIBool } from "./object-types/RTIBool";
 import { RTINumber } from "./object-types/RTINumber";
 import { RTIString } from "./object-types/RTIString";
-import {
-  RTIBooleanValidation,
-  RTINumberValidation,
-  RTIStringValidation
-} from "./object-types/ValidationTypes";
+import { TBooleanValidation, TNumberValidation, TStringValidation } from "./object-types/ValidationTypes";
+
 import { RTInterface } from "./types/RTInterface";
 import { MUtils } from "./utils/MUtils";
 
@@ -105,11 +102,11 @@ export namespace RTI {
     : never;
 
   type RTIToValidation<T> = T extends RTIString
-    ? RTIStringValidation
+    ? TStringValidation
     : T extends RTIBool
-    ? RTIBooleanValidation
+    ? TBooleanValidation
     : T extends RTINumber
-    ? RTINumberValidation
+    ? TNumberValidation
     : never;
 
   export type Validations<T extends RTI<any>> = T extends RTI<infer U>

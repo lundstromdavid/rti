@@ -1,15 +1,15 @@
-import { RTINumberValidation } from "../object-types/ValidationTypes";
 import { AbsRTIType } from "./AbsRTIType";
-import { TRTIValidation } from "./ValidationTypes";
+import { TNumberValidation } from "./ValidationTypes";
 
-export class RTINumber extends AbsRTIType<RTINumberValidation> {
+export class RTINumber extends AbsRTIType<number> {
 
-    private readonly type = "RTINumber";    
+    private readonly type = "number";    
 
-    validate(value: any): RTINumberValidation {
+    validate(value: any): TNumberValidation {
 
     	return {
     		discriminator: this.type,
+			customValidationPassed: false,
     		passed: typeof value === "number",
 			correctType: true,
     		bigEnough: true,

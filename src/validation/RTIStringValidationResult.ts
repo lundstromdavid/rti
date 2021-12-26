@@ -1,55 +1,56 @@
-import { isNull } from "../utils/NullCheck";
 import { RTIStringProps } from "../object-types/RTIString";
 import {
-  TypeConfirmation,
-  RTIStringValidation,
-  RTIUnchecked,
-  TRTIUnchecked,
+  TRTIUnchecked, TSingleValidation, TStringValidation, TTypeConfirmation
 } from "../object-types/ValidationTypes";
-import { AbsRTIPrimitiveValidation } from "./AbsRTIPrimitiveValidation";
+import { isNull } from "../utils/NullCheck";
+import { PrimitiveValidator } from "./AbsRTIPrimitiveValidation";
 
-export class RTIStringValidationResult extends AbsRTIPrimitiveValidation<string> {
-  protected readonly validation: Omit<
-    RTIStringValidation,
-    "passed" | "correctType"
-  > = {
-    discriminator: "string",
-    longEnough: RTIUnchecked,
-    notTooLong: RTIUnchecked,
-    containsAllProvidedValues: RTIUnchecked,
-    containsAtLeastOneProvidedValue: RTIUnchecked,
-  };
+export class RTIStringValidationResult implements TStringValidation
+{
+  
+  public readonly passed: boolean;
+  public readonly discriminator: "string";
+  public readonly correctType: TTypeConfirmation<string>;
+  public readonly customValidationPassed: TSingleValidation;
+  public readonly longEnough: TSingleValidation;
+  public readonly notTooLong: TSingleValidation;
+  public readonly containsAllProvidedValues: TSingleValidation;
+  public readonly containsAtLeastOneProvidedValue: TSingleValidation;
 
   private confirmedValue: string;
 
   public constructor(
-    private readonly value: object,
+    private readonly value: any,
     private readonly args: RTIStringProps
   ) {
-    super(value);
+    const {passed: basePassed, customValidationPassed, typeConfirmation} = new PrimitiveValidator<string>(value, "string", args.customValidation);
+
+    this.correctType = typeConfirmation;
+    if (!basePassed) {
+      this.passed = false;
+    } else {
+      this.confirmedValue = value as string;
+      this.customValidationPassed = customValidationPassed;
+      this.longEnough = this.checkLongEnough();
+      this.notTooLong = this.checkNotTooLong();
+      this.containsAllProvidedValues = this.checkContainsAll();
+      this.containsAtLeastOneProvidedValue = this.checkContainsSome();
+      this.passed = this.checkPassed();
+    }
+
+    
   }
 
-  validateType(object: any): TypeConfirmation<string> {
-    if (typeof object === "string") return true;
-    else
-      return {
-        expected: "string",
-        actual: typeof object,
-      };
-  }
-
-  performChecks() {
-    this.validation.longEnough = this.checkLongEnough();
-    this.validation.notTooLong = this.checkNotTooLong();
-    this.validation.containsAllProvidedValues = this.checkContainsAll();
-    this.validation.containsAtLeastOneProvidedValue = this.checkContainsSome();
+  private checkPassed(): boolean {
     return [
-      this.validation.longEnough,
-      this.validation.notTooLong,
-      this.validation.containsAllProvidedValues,
-      this.validation.containsAtLeastOneProvidedValue,
+      this.customValidationPassed,
+      this.longEnough,
+      this.notTooLong,
+      this.containsAllProvidedValues,
+      this.containsAtLeastOneProvidedValue,
     ].every((val) => val !== false);
   }
+
 
 
   private checkLongEnough(): boolean {

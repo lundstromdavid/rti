@@ -1,12 +1,13 @@
 import { MinHigherThanMax } from "../exceptions/MinHigherThanMax";
 import { ZeroOrLowerValueException } from "../exceptions/ZeroOrLowerException";
-import { RTIStringValidation } from "../object-types/ValidationTypes";
+import { TRTIValidation } from "../object-types/ValidationTypes";
 import { RTICase } from "../types/RTICase";
 import assert from "../utils/Assert";
 import { MUtils } from "../utils/MUtils";
 import { notNull } from "../utils/NullCheck";
-import { AbsRTIType } from "./AbsRTIType";
+import { TCustomValidationCallback } from "../validation/AbsRTIPrimitiveValidation";
 import { RTIStringValidationResult } from "../validation/RTIStringValidationResult";
+import { AbsRTIType } from "./AbsRTIType";
 
 export type RTIStringProps = {
   minLength?: number;
@@ -15,9 +16,10 @@ export type RTIStringProps = {
   includesAllCaseInsensitive?: string[];
   includesSomeCaseSensitive?: string[];
   includesSomeCaseInsensitive?: string[];
+  customValidation?: TCustomValidationCallback<string>;
 };
 
-export class RTIString extends AbsRTIType<RTIStringValidation> {
+export class RTIString extends AbsRTIType<string> {
   private readonly discriminator = "RTIString";
   private readonly props: RTIStringProps = {};
 
@@ -82,7 +84,7 @@ export class RTIString extends AbsRTIType<RTIStringValidation> {
     return this;
   }
 
-  public validate(value: any): RTIStringValidation {
+  public validate(value: any): TRTIValidation<string> {
     return new RTIStringValidationResult(value, this.props);
   }
 }

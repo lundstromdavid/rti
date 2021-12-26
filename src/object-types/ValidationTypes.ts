@@ -3,36 +3,41 @@ import { TPrimitive, TPrimitiveToString } from "../types/Primitive";
 export const RTIUnchecked: TRTIUnchecked = "unchecked";
 export type TRTIUnchecked = "unchecked";
 
-export type TypeConfirmation<T extends TPrimitive> =
+export type TPrimitiveToValidation<T extends TPrimitive> = T extends string
+  ? TStringValidation
+  : T extends number
+  ? TNumberValidation
+  : TBooleanValidation;
+
+export type TTypeConfirmation<T extends TPrimitive> =
   | true
   | {
       expected: TPrimitiveToString<T>;
       actual: string;
     };
 
-export interface RTIValidation<T extends TPrimitive> {
+export type TBaseValidation<T extends TPrimitive> = {
   discriminator: TPrimitiveToString<T>;
   passed: boolean;
-  correctType: TypeConfirmation<T>;
+  correctType: TTypeConfirmation<T>;
   customValidationPassed: boolean | TRTIUnchecked;
 }
 
-export interface RTIStringValidation extends RTIValidation<string> {
+export interface TStringValidation extends TBaseValidation<string> {
   longEnough: boolean | TRTIUnchecked;
   notTooLong: boolean | TRTIUnchecked;
   containsAllProvidedValues: boolean | TRTIUnchecked;
   containsAtLeastOneProvidedValue: boolean | TRTIUnchecked;
 }
 
-export interface RTINumberValidation extends RTIValidation<number> {
+export interface TNumberValidation extends TBaseValidation<number> {
   bigEnough: boolean | TRTIUnchecked;
   notTooBig: boolean | TRTIUnchecked;
   passedIntegerCheck: boolean | TRTIUnchecked;
 }
 
-export interface RTIBooleanValidation extends RTIValidation<boolean> {}
+export interface TBooleanValidation extends TBaseValidation<boolean> {}
 
-export type TRTIValidation =
-  | RTIStringValidation
-  | RTINumberValidation
-  | RTIBooleanValidation;
+export type TRTIValidation<T extends TPrimitive> = TPrimitiveToValidation<T>
+
+export type TSingleValidation = TRTIUnchecked | boolean;
