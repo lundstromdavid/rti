@@ -2,7 +2,6 @@ import { RTI } from "../../RTI";
 
 // MIN LENGTH
 
-
 test("minLength - force to be > 0", () => {
 
 	expect(() => RTI.create({testValue: RTI.string().minLength(0)})).toThrow();

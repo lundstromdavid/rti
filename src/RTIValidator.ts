@@ -1,22 +1,15 @@
-import {
-  EValidationError,
-  RTIValidationError,
-} from "./errors/RTIValidationError";
+import { RTIValidationError } from "./errors/RTIValidationError";
 import { RTInterface } from "./types/RTInterface";
 import { MUtils } from "./utils/MUtils";
 
-export abstract class AbsRTIValidated<T extends RTInterface> {
-  constructor(
-    private props: {
-      objects: T;
-      valuesToValidate: any;
-    }
-  ) {
-    this.validate();
-  }
+export type TRTIValidatorArgs<T extends RTInterface> = {
+	objects: T;
+    valuesToValidate: any;
+}
 
-  private validate() {
-    const { objects, valuesToValidate } = this.props;
+export class RTIValidator {
+  public static validate<T extends RTInterface>(args: TRTIValidatorArgs<T>) {
+    const { objects, valuesToValidate } = args;
 
     if (typeof valuesToValidate !== "object") {
       throw RTIValidationError.passedValuesNotAnObject(valuesToValidate);
