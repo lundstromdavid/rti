@@ -1,16 +1,17 @@
+import { AbsRTIValidated } from "./AbsRTIValidated";
 import { RTIBool } from "./object-types/RTIBool";
 import { RTINumber } from "./object-types/RTINumber";
 import { RTIString } from "./object-types/RTIString";
-import { TBooleanValidation, TNumberValidation, TStringValidation } from "./object-types/ValidationTypes";
-
+import {
+  TBooleanValidation,
+  TNumberValidation,
+  TStringValidation
+} from "./object-types/ValidationTypes";
 import { RTInterface } from "./types/RTInterface";
-import { MUtils } from "./utils/MUtils";
+
 
 export class RTI<T extends RTInterface> {
-
-
-  constructor(private readonly objects: T) {
-  }
+  constructor(private readonly objects: T) {}
 
   static create<T extends RTInterface>(obj: T) {
     return new RTI(obj);
@@ -24,70 +25,19 @@ export class RTI<T extends RTInterface> {
   }
 }
 
-class RTIValidated<T extends RTInterface> {
-  constructor(
-    private props: {
-      objects: T;
-      valuesToValidate: any;
-    }
-  ) {
-    this.validate();
-  }
-
-  private validate() {
-    
-    const { objects, valuesToValidate } = this.props;
-
-    if (typeof valuesToValidate !== "object") {
-      throw RTIValidationError.notAnObject();
-    }
-
-    MUtils.entries(objects).forEach(([key, rtiObj]) => {
-      if (!(key in valuesToValidate)) {
-        if (!rtiObj.isOptional()) {
-          throw new Error("Required entry not included");
-        }
-      }
-
-      const val = valuesToValidate[key];
-
-      const validation = rtiObj.validate(val);
-
-      if (!validation.passed) {
-        throw new Error("Validation failed to pass");
-      }
-    });
-  }
-}
-
-export class RTIValidationError {
-  private constructor() {
-    Object.setPrototypeOf(this, RTIValidationError.prototype);
-  }
-
-  public static notAnObject() {
-    return new RTIValidationError();
-  }
-}
+class RTIValidated<T extends RTInterface> extends AbsRTIValidated<T> {}
 
 export namespace RTI {
   export const string = () => new RTIString();
   export const number = () => new RTINumber();
   export const boolean = () => new RTIBool();
 
-  /*  export type Interface<T extends RTI<any>> = T extends RTI<infer U>
-    ? {
-        [key in keyof U]: RTIToPrimitive<U[key]>;
-      }
-    : never; */
-
   export type Interface<T extends RTI<any>> = T extends RTI<infer U>
     ? {
         [key in keyof U as RequiredKey<key>]: RTIToPrimitive<U[key]>;
-      } &
-        {
-          [key in keyof U as OptionalKey<key>]?: RTIToPrimitive<U[key]>;
-        }
+      } & {
+        [key in keyof U as OptionalKey<key>]?: RTIToPrimitive<U[key]>;
+      }
     : never;
 
   type RequiredKey<K> = K extends `${infer pre}?${infer rest}` ? never : K;
