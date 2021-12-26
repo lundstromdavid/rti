@@ -3,7 +3,7 @@ import {
   TRTIUnchecked, TSingleValidation, TStringValidation, TTypeConfirmation
 } from "../object-types/ValidationTypes";
 import { isNull } from "../utils/NullCheck";
-import { PrimitiveValidator } from "./AbsRTIPrimitiveValidation";
+import { PrimitiveValidator } from "./PrimitiveValidator";
 
 export class RTIStringValidationResult implements TStringValidation
 {

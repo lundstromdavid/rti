@@ -1,6 +1,7 @@
-import { RTI } from "../RTI";
+import { RTI } from "../../RTI";
 
 // MIN LENGTH
+
 
 test("minLength - force to be > 0", () => {
 

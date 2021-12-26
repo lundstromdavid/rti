@@ -5,7 +5,7 @@ import { RTICase } from "../types/RTICase";
 import assert from "../utils/Assert";
 import { MUtils } from "../utils/MUtils";
 import { notNull } from "../utils/NullCheck";
-import { TCustomValidationCallback } from "../validation/AbsRTIPrimitiveValidation";
+import { TCustomValidationCallback } from "../validation/PrimitiveValidator";
 import { RTIStringValidationResult } from "../validation/RTIStringValidationResult";
 import { AbsRTIType } from "./AbsRTIType";
 
@@ -23,11 +23,19 @@ export class RTIString extends AbsRTIType<string> {
   private readonly discriminator = "RTIString";
   private readonly props: RTIStringProps = {};
 
+  public min(min: number): RTIString {
+    return this.minLength(min);
+  }
+
   public minLength(min: number): RTIString {
     this.props.minLength = min;
     this.assertValidMinAndMaxLength();
 
     return this;
+  }
+
+  public max(max: number): RTIString {
+    return this.maxLength(max);
   }
 
   public maxLength(max: number): RTIString {
@@ -37,10 +45,12 @@ export class RTIString extends AbsRTIType<string> {
     return this;
   }
 
-  public lengthInRange(min: number, max: number): RTIString {
-    this.minLength(min).maxLength(max);
+  public range(min: number, max: number): RTIString {
+    return this.lengthInRange(min, max);
+  }
 
-    return this;
+  public lengthInRange(min: number, max: number): RTIString {
+    return this.min(min).max(max);
   }
 
   private assertValidMinAndMaxLength() {

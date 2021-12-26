@@ -1,5 +1,5 @@
-import { RTI } from "../RTI";
-import { RTICase } from "../types/RTICase";
+import { RTI } from "../../RTI";
+import { RTICase } from "../../types/RTICase";
 
 test("includes all - case sensitive", () => {
   const shouldInclude = ["some", "test", "words"];
