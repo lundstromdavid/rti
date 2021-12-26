@@ -1,13 +1,15 @@
 import { RTIStringProps } from "../object-types/RTIString";
 import {
-  TRTIUnchecked, TSingleValidation, TStringValidation, TTypeConfirmation
+  TRTIUnchecked,
+  TSingleValidation,
+  TStringValidation,
+  TTypeConfirmation,
 } from "../object-types/ValidationTypes";
+import { RTICase } from "../types/RTICase";
 import { isNull } from "../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
-export class RTIStringValidationResult implements TStringValidation
-{
-  
+export class RTIStringValidationResult implements TStringValidation {
   public readonly passed: boolean;
   public readonly discriminator: "string";
   public readonly correctType: TTypeConfirmation<string>;
@@ -23,7 +25,11 @@ export class RTIStringValidationResult implements TStringValidation
     private readonly value: any,
     private readonly args: RTIStringProps
   ) {
-    const {passed: basePassed, customValidationPassed, typeConfirmation} = new PrimitiveValidator<string>(value, "string", args.customValidation);
+    const {
+      passed: basePassed,
+      customValidationPassed,
+      typeConfirmation,
+    } = new PrimitiveValidator<string>(value, "string", args.customValidation);
 
     this.correctType = typeConfirmation;
     if (!basePassed) {
@@ -37,8 +43,6 @@ export class RTIStringValidationResult implements TStringValidation
       this.containsAtLeastOneProvidedValue = this.checkContainsSome();
       this.passed = this.checkPassed();
     }
-
-    
   }
 
   private checkPassed(): boolean {
@@ -51,8 +55,6 @@ export class RTIStringValidationResult implements TStringValidation
     ].every((val) => val !== false);
   }
 
-
-
   private checkLongEnough(): boolean {
     const { minLength } = this.args;
     return isNull(minLength) || this.confirmedValue.length >= minLength;
@@ -62,17 +64,29 @@ export class RTIStringValidationResult implements TStringValidation
     return isNull(maxLength) || this.confirmedValue.length <= maxLength;
   }
   private checkContainsAll(): boolean {
-    const { includesAllCaseSensitive } = this.args;
+    const {includesAllCaseSensitive, includesAllCaseInsensitive} = this.args;
     return (
-      isNull(includesAllCaseSensitive) ||
-      includesAllCaseSensitive.every((val) => this.confirmedValue.includes(val))
+      this.checkContains(includesAllCaseSensitive, RTICase.sensitive, "every") &&
+      this.checkContains(includesAllCaseInsensitive, RTICase.insensitive, "every")
     );
   }
+
   private checkContainsSome(): boolean {
-    const { includesSomeCaseSensitive } = this.args;
+    const {includesSomeCaseSensitive, includesSomeCaseInsensitive} = this.args;
     return (
-      isNull(includesSomeCaseSensitive) ||
-      includesSomeCaseSensitive.some((val) => this.confirmedValue.includes(val))
+      this.checkContains(includesSomeCaseSensitive, RTICase.sensitive, "some") &&
+      this.checkContains(includesSomeCaseInsensitive, RTICase.insensitive, "some")
     );
   }
+
+  private transform = (val: string, mode: RTICase) =>
+  mode === RTICase.sensitive ? val : val.toUpperCase();
+
+  private checkContains(arr: string[], mode: RTICase, functionType: "every" | "some"): boolean {
+    const val = this.transform(this.confirmedValue, mode);
+    return isNull(arr) || arr[functionType](el => val.includes(this.transform(el, mode)));
+  }
+
+
+
 }
