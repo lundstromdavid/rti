@@ -10,7 +10,7 @@ import { RTInterface } from "./types/RTInterface";
 export class RTI<T extends RTInterface> {
   constructor(private readonly objects: T) {}
 
-  /* static get string() {
+  static get string() {
     return new RTIString();
   }
   static get number() {
@@ -21,7 +21,7 @@ export class RTI<T extends RTInterface> {
   }
   static get optional() {
     return Optional;
-  } */
+  }
 
   static create<T extends RTInterface>(obj: T) {
     return new RTI(obj);
@@ -56,13 +56,14 @@ class RTIValidated<T extends RTInterface> {
   }
 }
 
-const test: RTIValidated<{
+// This causes the tests to crash ??
+/* const test: RTIValidated<{
   testProperty: RTIString;
 }> = new RTIValidated({} as any);
-
+ */
 export namespace RTI {
 
-  export const string = () =>  {
+ /*  export const string = () =>  {
     return new RTIString();
   }
   export const number = () =>  {
@@ -71,7 +72,7 @@ export namespace RTI {
   export const boolean = () =>  {
     return new RTIBool();
   }
-
+ */
   export type ConvertToInterface<T extends RTI<any>> = T extends RTI<infer U>
     ? {
         [key in keyof U as Required<U, key>]: RTIToPrimitive<U[key]>;
