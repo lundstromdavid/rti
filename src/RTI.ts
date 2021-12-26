@@ -1,3 +1,4 @@
+import { RTIValidationError } from "./errors/RTIValidationError";
 import { RTIBool } from "./object-types/RTIBool";
 import { RTINumber } from "./object-types/RTINumber";
 import { RTIOptionalBool } from "./object-types/RTIOptionalBool";
@@ -36,6 +37,27 @@ export class RTI<T extends RTInterface> {
       valuesToValidate,
     });
   }
+
+  validateSafely(valuesToValidate: any):
+    | { validated: RTIValidated<T>; error?: false }
+    | {
+        validated?: false;
+        error: RTIValidationError<any>;
+      } {
+    throw "This doesnt work";
+    try {
+      return {
+        validated: this.validate(valuesToValidate),
+      };
+    } catch (error) {
+      if (error instanceof RTIValidationError) {
+        return {
+          error,
+        };
+      }
+      throw new Error("This shouldn't happen");
+    }
+  }
 }
 class Optional {
   static get string() {
@@ -62,23 +84,15 @@ class RTIValidated<T extends RTInterface> {
 }> = new RTIValidated({} as any);
  */
 export namespace RTI {
-
- /*  export const string = () =>  {
-    return new RTIString();
-  }
-  export const number = () =>  {
-    return new RTINumber();
-  }
-  export const boolean = () =>  {
-    return new RTIBool();
-  }
- */
   export type ConvertToInterface<T extends RTI<any>> = T extends RTI<infer U>
-    ? {
-        [key in keyof U as Required<U, key>]: RTIToPrimitive<U[key]>;
-      } & {
-        [key in keyof U as Optional<U, key>]?: RTIToPrimitive<U[key]>;
-      }
+    ? Omit<
+        {
+          [key in keyof U as Required<U, key>]: RTIToPrimitive<U[key]>;
+        } & {
+          [key in keyof U as Optional<U, key>]?: RTIToPrimitive<U[key]>;
+        },
+        ""
+      >
     : never;
 
   type TOptional = RTIOptionalBool | RTIOptionalNumber | RTIOptionalString;
@@ -92,8 +106,6 @@ export namespace RTI {
     K extends keyof R
   > = R[K] extends TOptional ? K : never;
 
-
-
   type RTIToPrimitive<T> = T extends RTIString
     ? string
     : T extends RTIBool
@@ -101,9 +113,4 @@ export namespace RTI {
     : T extends RTINumber
     ? number
     : never;
-
-
-    type Test<T> = T extends RTIOptionalBool ? true : false;
-    type T1 = Test<RTIOptionalBool>; 
-    type T2 = Test<RTIBool>; 
 }
