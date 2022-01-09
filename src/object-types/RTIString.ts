@@ -23,11 +23,9 @@ export class RTIString extends AbsRTIType<string> {
   private readonly discriminator = "RTIString";
   private readonly props: RTIStringProps = {};
 
-  public min(min: number): RTIString {
-    return this.minLength(min);
-  }
 
-  public minLength(min: number): RTIString {
+
+  public min(min: number): RTIString {
     this.props.minLength = min;
     this.assertValidMinAndMaxLength();
 
@@ -35,10 +33,6 @@ export class RTIString extends AbsRTIType<string> {
   }
 
   public max(max: number): RTIString {
-    return this.maxLength(max);
-  }
-
-  public maxLength(max: number): RTIString {
     this.props.maxLength = max;
     this.assertValidMinAndMaxLength();
 
@@ -46,12 +40,9 @@ export class RTIString extends AbsRTIType<string> {
   }
 
   public range(min: number, max: number): RTIString {
-    return this.lengthInRange(min, max);
-  }
-
-  public lengthInRange(min: number, max: number): RTIString {
     return this.min(min).max(max);
   }
+
 
   private assertValidMinAndMaxLength() {
     const { minLength, maxLength } = this.props;
