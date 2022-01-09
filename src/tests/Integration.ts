@@ -26,15 +26,11 @@ const mockNetworkData: IUser = {
 const validated = User.validate(mockNetworkData);
 
 
-function test(user: ValidatedUser) {
-	RTI.assertValid({user});
-}
-
-type Schema<T extends RTI<any>> = T extends RTI<infer U> ? U : never;
-
-function test2(user: ValidatedUser) {
+function test(_user: ValidatedUser) {
+	const {user} = RTI.assertValid({_user});
 	
 }
+
 
 
 /* 

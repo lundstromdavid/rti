@@ -11,16 +11,33 @@ import assert from "./utils/Assert";
 import { MUtils } from "./utils/MUtils";
 
 type ValidatedArguments = { [argumentName: string]: RTI.Validated<any> };
-
-
+type AssertValidReturn<T extends ValidatedArguments> = {
+  [key in keyof T as StripFirstUnderscore<key>]: T[key]["values"];
+};
+type StripFirstUnderscore<key> = key extends `_${infer rest}` ? rest : key;
 
 export class RTI<T extends RTISchema> {
   constructor(private readonly schema: T) {}
 
-  static assertValid(validated: ValidatedArguments) {
+  private static stripFirstUnderscore<T extends string | number | symbol>(
+    key: T
+  ): StripFirstUnderscore<T> {
+    if (typeof key === "string" && key.substring(0, 1) === "_") {
+      return key.substring(1) as StripFirstUnderscore<T>;
+    }
+    return key as StripFirstUnderscore<T>;
+  }
+
+  static assertValid<Args extends ValidatedArguments>(
+    validated: Args
+  ): AssertValidReturn<Args> {
+    const returnVal: Partial<AssertValidReturn<Args>> = {};
     MUtils.entries(validated).forEach(([key, value]) => {
       assert(value instanceof RTI.Validated);
+      const stripped = this.stripFirstUnderscore(key);
+      returnVal[stripped] = value.values;
     });
+    return returnVal as AssertValidReturn<Args>;
   }
 
   static get string() {
@@ -123,9 +140,8 @@ export namespace RTI {
     : never;
 }
 
-
 const string = RTI.string;
 const number = RTI.number;
 const boolean = RTI.number;
 const optional = RTI.optional;
-export {string, number, boolean, optional};
+export { string, number, boolean, optional };
