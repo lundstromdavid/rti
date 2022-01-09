@@ -31,13 +31,14 @@ export class RTI<T extends RTISchema> {
   static assertValid<Args extends ValidatedArguments>(
     validated: Args
   ): AssertValidReturn<Args> {
-    const returnVal: Partial<AssertValidReturn<Args>> = {};
+    throw "not imp,kemetnted"
+    /* const returnVal: Partial<AssertValidReturn<Args>> = {};
     MUtils.entries(validated).forEach(([key, value]) => {
       assert(value instanceof RTI.Validated);
       const stripped = this.stripFirstUnderscore(key);
       returnVal[stripped] = value.values;
     });
-    return returnVal as AssertValidReturn<Args>;
+    return returnVal as AssertValidReturn<Args>; */
   }
 
   static get string() {
