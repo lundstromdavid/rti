@@ -1,22 +1,64 @@
+import { MUtils } from "../utils/MUtils";
+import { TCustomValidationCallback } from "../validation/PrimitiveValidator";
+import { RTINumberValidationResult } from "../validation/RTINumberValidationResult";
+import { RTIValidation } from "../validation/RTIValidation";
 import { AbsRTIType } from "./AbsRTIType";
-import { TNumberValidation } from "./ValidationTypes";
+
+export type RTINumberProps = {
+  minValue?: number;
+  maxValue?: number;
+  integer?: boolean;
+  divisibleBy?: number[];
+  customValidation?: TCustomValidationCallback<string>;
+};
 
 export class RTINumber extends AbsRTIType<number> {
+  private readonly discriminator = "number";
+  private readonly props: RTINumberProps = {};
 
-    private readonly type = "number";    
+  public min(min: number): RTINumber {
+    this.props.minValue = min;
+    this.assertValidMinAndMaxLength();
 
-    validate(value: any): TNumberValidation {
+    return this;
+  }
 
-    	return {
-    		discriminator: this.type,
-			customValidationPassed: false,
-    		passed: typeof value === "number",
-			correctType: true,
-    		bigEnough: true,
-    		notTooBig: true,
-    		passedIntegerCheck: true
-    	};
+  public max(max: number): RTINumber {
+    this.props.maxValue = max;
+    this.assertValidMinAndMaxLength();
 
-    }
+    return this;
+  }
 
+  public range(min: number, max: number): RTINumber {
+    return this.min(min).max(max);
+  }
+
+  public integer() {
+	  this.props.integer = true;
+  }
+
+  public divisibleBy(nums: number | number[]) {
+	this.props.divisibleBy = MUtils.asArray(nums);
+  }
+
+  private assertValidMinAndMaxLength() {
+    RTIValidation.assertMinHigherThanMax(
+      this.props.minValue,
+      this.props.maxValue
+    );
+  }
+
+  validate(value: any): RTINumberValidationResult {
+	  return new RTINumberValidationResult();
+    /* return {
+      discriminator: this.discriminator,
+      customValidationPassed: false,
+      passed: typeof value === "number",
+      correctType: true,
+      bigEnough: true,
+      notTooBig: true,
+      passedIntegerCheck: true,
+    }; */
+  }
 }

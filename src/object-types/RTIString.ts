@@ -1,12 +1,9 @@
-import { MinHigherThanMax } from "../exceptions/MinHigherThanMax";
-import { ZeroOrLowerValueException } from "../exceptions/ZeroOrLowerException";
 import { TRTIValidation } from "../object-types/ValidationTypes";
 import { RTI } from "../RTI";
-import assert from "../utils/Assert";
 import { MUtils } from "../utils/MUtils";
-import { notNull } from "../utils/NullCheck";
 import { TCustomValidationCallback } from "../validation/PrimitiveValidator";
 import { RTIStringValidationResult } from "../validation/RTIStringValidationResult";
+import { RTIValidation } from "../validation/RTIValidation";
 import { AbsRTIType } from "./AbsRTIType";
 
 export type RTIStringProps = {
@@ -45,14 +42,7 @@ export class RTIString extends AbsRTIType<string> {
 
 
   private assertValidMinAndMaxLength() {
-    const { minLength, maxLength } = this.props;
-    const minNotNull = notNull(minLength);
-    const maxNotNull = notNull(maxLength);
-    if (minNotNull) assert(minLength > 0, new ZeroOrLowerValueException());
-    if (maxNotNull) assert(maxLength > 0, new ZeroOrLowerValueException());
-    if (minNotNull && maxNotNull) {
-      assert(minLength < maxLength, new MinHigherThanMax());
-    }
+    RTIValidation.assertMinHigherThanMax(this.props.minLength, this.props.maxLength);
   }
 
   public includesAll(
@@ -85,7 +75,7 @@ export class RTIString extends AbsRTIType<string> {
     return this;
   }
 
-  public validate(value: any): TRTIValidation<string> {
+  public validate(value: any): RTIStringValidationResult {
     return new RTIStringValidationResult(value, this.props);
   }
 }
