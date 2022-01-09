@@ -19,26 +19,27 @@ type StripFirstUnderscore<key> = key extends `_${infer rest}` ? rest : key;
 export class RTI<T extends RTISchema> {
   constructor(private readonly schema: T) {}
 
-  private static stripFirstUnderscore<T extends string | number | symbol>(
-    key: T
-  ): StripFirstUnderscore<T> {
+  private static stripFirstUnderscore<T extends ValidatedArguments>(
+    key: keyof T
+  ): StripFirstUnderscore<keyof T> {
     if (typeof key === "string" && key.substring(0, 1) === "_") {
-      return key.substring(1) as StripFirstUnderscore<T>;
+      return key.substring(1) as StripFirstUnderscore<keyof T>;
     }
-    return key as StripFirstUnderscore<T>;
+    return key as StripFirstUnderscore<keyof T>;
   }
 
   static assertValid<Args extends ValidatedArguments>(
     validated: Args
   ): AssertValidReturn<Args> {
-    throw "not imp,kemetnted"
-    /* const returnVal: Partial<AssertValidReturn<Args>> = {};
+    // Using this type does not let me index it with the below "stripped" variable
+    // const returnVal: Partial<AssertValidReturn<Args>> = {};
+    const returnVal: any = {};
     MUtils.entries(validated).forEach(([key, value]) => {
       assert(value instanceof RTI.Validated);
       const stripped = this.stripFirstUnderscore(key);
       returnVal[stripped] = value.values;
     });
-    return returnVal as AssertValidReturn<Args>; */
+    return returnVal as AssertValidReturn<Args>;
   }
 
   static get string() {
