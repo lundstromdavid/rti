@@ -112,6 +112,11 @@ export namespace RTI {
     }
   }
 
+  export enum Case {
+    sensitive,
+    insensitive
+  }
+
   export type ConvertToInterface<T extends RTI<any>> = T extends RTI<infer U>
     ? Omit<
         {

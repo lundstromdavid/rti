@@ -1,7 +1,7 @@
 import { MinHigherThanMax } from "../exceptions/MinHigherThanMax";
 import { ZeroOrLowerValueException } from "../exceptions/ZeroOrLowerException";
 import { TRTIValidation } from "../object-types/ValidationTypes";
-import { RTICase } from "../types/RTICase";
+import { RTI } from "../RTI";
 import assert from "../utils/Assert";
 import { MUtils } from "../utils/MUtils";
 import { notNull } from "../utils/NullCheck";
@@ -66,13 +66,13 @@ export class RTIString extends AbsRTIType<string> {
 
   public includesAll(
     values: string | string[],
-    mode: RTICase = RTICase.sensitive
+    mode: RTI.Case = RTI.Case.sensitive
   ): RTIString {
     switch (mode) {
-      case RTICase.sensitive:
+      case RTI.Case.sensitive:
         this.props.includesAllCaseSensitive = MUtils.asArray(values);
         break;
-      case RTICase.insensitive:
+      case RTI.Case.insensitive:
         this.props.includesAllCaseInsensitive = MUtils.asArray(values);
         break;
     }
@@ -81,13 +81,13 @@ export class RTIString extends AbsRTIType<string> {
 
   public includesSome(
     values: string | string[],
-    mode: RTICase = RTICase.sensitive
+    mode: RTI.Case = RTI.Case.sensitive
   ): RTIString {
     switch (mode) {
-      case RTICase.sensitive:
+      case RTI.Case.sensitive:
         this.props.includesSomeCaseSensitive = MUtils.asArray(values);
         break;
-      case RTICase.insensitive:
+      case RTI.Case.insensitive:
         this.props.includesSomeCaseInsensitive = MUtils.asArray(values);
         break;
     }

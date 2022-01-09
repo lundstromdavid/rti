@@ -5,7 +5,7 @@ import {
   TStringValidation,
   TTypeConfirmation,
 } from "../object-types/ValidationTypes";
-import { RTICase } from "../types/RTICase";
+import { RTI } from "../RTI";
 import { isNull } from "../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
@@ -66,23 +66,23 @@ export class RTIStringValidationResult implements TStringValidation {
   private checkContainsAll(): boolean {
     const {includesAllCaseSensitive, includesAllCaseInsensitive} = this.args;
     return (
-      this.checkContains(includesAllCaseSensitive, RTICase.sensitive, "every") &&
-      this.checkContains(includesAllCaseInsensitive, RTICase.insensitive, "every")
+      this.checkContains(includesAllCaseSensitive, RTI.Case.sensitive, "every") &&
+      this.checkContains(includesAllCaseInsensitive, RTI.Case.insensitive, "every")
     );
   }
 
   private checkContainsSome(): boolean {
     const {includesSomeCaseSensitive, includesSomeCaseInsensitive} = this.args;
     return (
-      this.checkContains(includesSomeCaseSensitive, RTICase.sensitive, "some") &&
-      this.checkContains(includesSomeCaseInsensitive, RTICase.insensitive, "some")
+      this.checkContains(includesSomeCaseSensitive, RTI.Case.sensitive, "some") &&
+      this.checkContains(includesSomeCaseInsensitive, RTI.Case.insensitive, "some")
     );
   }
 
-  private transform = (val: string, mode: RTICase) =>
-  mode === RTICase.sensitive ? val : val.toUpperCase();
+  private transform = (val: string, mode: RTI.Case) =>
+  mode === RTI.Case.sensitive ? val : val.toUpperCase();
 
-  private checkContains(arr: string[], mode: RTICase, functionType: "every" | "some"): boolean {
+  private checkContains(arr: string[], mode: RTI.Case, functionType: "every" | "some"): boolean {
     const val = this.transform(this.confirmedValue, mode);
     return isNull(arr) || arr[functionType](el => val.includes(this.transform(el, mode)));
   }
