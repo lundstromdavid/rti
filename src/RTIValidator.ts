@@ -1,21 +1,22 @@
 import { RTIValidationError } from "./errors/RTIValidationError";
-import { RTInterface } from "./types/RTInterface";
+import { RTI } from "./RTI";
+import { RTISchema } from "./types/RTISchema";
 import { MUtils } from "./utils/MUtils";
 
-export type TRTIValidatorArgs<T extends RTInterface> = {
-	objects: T;
-    valuesToValidate: any;
-}
+export type TRTIValidatorArgs = {
+  schema: RTISchema;
+  valuesToValidate: any;
+};
 
 export class RTIValidator {
-  public static validate<T extends RTInterface>(args: TRTIValidatorArgs<T>) {
-    const { objects, valuesToValidate } = args;
+  public static validate<T extends RTI<any>>(args: TRTIValidatorArgs): Readonly<RTI.ConvertToInterface<T>> {
+    const { schema, valuesToValidate } = args;
 
     if (typeof valuesToValidate !== "object") {
       throw RTIValidationError.passedValuesNotAnObject(valuesToValidate);
     }
 
-    MUtils.entries(objects).forEach(([key, rtiObj]) => {
+    MUtils.entries(schema).forEach(([key, rtiObj]) => {
       if (!(key in valuesToValidate)) {
         if (!rtiObj.isOptional()) {
           throw RTIValidationError.requiredEntryNotIncluded(
@@ -36,5 +37,10 @@ export class RTIValidator {
         );
       }
     });
+
+    const copy = {...valuesToValidate};
+    Object.freeze(copy);
+
+    return copy;
   }
 }

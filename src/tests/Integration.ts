@@ -1,17 +1,18 @@
-import { RTI } from "../RTI";
+import { RTI, string, number, optional  } from "../RTI";
+
 
 const User = RTI.create({
-	id: RTI.string,
-	username: RTI.string.range(8, 25), 
-	password: RTI.string.range(8, 25),
-	email: RTI.string,
-	age: RTI.number,
-	subscribesToNewsletter: RTI.optional.boolean,
+	id: string,
+	username: string.range(8, 25), 
+	password: string.range(8, 25),
+	email: string,
+	age: number,
+	subscribesToNewsletter: optional.boolean,
 });
 
 type TUser = typeof User;
+type ValidatedUser = RTI.Validated<TUser>;
 type IUser = RTI.ConvertToInterface<TUser>;
-
 
 const mockNetworkData: IUser = {
 	id: "this is not an id",
@@ -21,6 +22,21 @@ const mockNetworkData: IUser = {
 	age: 25,
 	subscribesToNewsletter: true
 };
+
+const validated = User.validate(mockNetworkData);
+
+
+function test(user: ValidatedUser) {
+	RTI.assertValid({user});
+}
+
+type Schema<T extends RTI<any>> = T extends RTI<infer U> ? U : never;
+
+function test2(user: ValidatedUser) {
+	
+}
+
+
 /* 
 const {validated, error } = User.validateSafely(mockNetworkData);
 

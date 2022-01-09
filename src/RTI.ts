@@ -6,10 +6,22 @@ import { RTIOptionalNumber } from "./object-types/RTIOptionalNumber";
 import { RTIOptionalString } from "./object-types/RTIOptionalString";
 import { RTIString } from "./object-types/RTIString";
 import { RTIValidator, TRTIValidatorArgs } from "./RTIValidator";
-import { RTInterface } from "./types/RTInterface";
+import { RTISchema } from "./types/RTISchema";
+import assert from "./utils/Assert";
+import { MUtils } from "./utils/MUtils";
 
-export class RTI<T extends RTInterface> {
-  constructor(private readonly objects: T) {}
+type ValidatedArguments = { [argumentName: string]: RTI.Validated<any> };
+
+
+
+export class RTI<T extends RTISchema> {
+  constructor(private readonly schema: T) {}
+
+  static assertValid(validated: ValidatedArguments) {
+    MUtils.entries(validated).forEach(([key, value]) => {
+      assert(value instanceof RTI.Validated);
+    });
+  }
 
   static get string() {
     return new RTIString();
@@ -24,21 +36,18 @@ export class RTI<T extends RTInterface> {
     return Optional;
   }
 
-  static create<T extends RTInterface>(obj: T) {
+  static create<T extends RTISchema>(obj: T) {
     return new RTI(obj);
   }
-  static create2<T extends RTInterface>(obj: T) {
-    return "";
-  }
 
-  validate(valuesToValidate: any): RTIValidated<T> {
-    return new RTIValidated({
-      objects: this.objects,
+  validate(valuesToValidate: any): RTI.Validated<this> {
+    return new RTI.Validated({
+      schema: this.schema,
       valuesToValidate,
     });
   }
 
-  validateSafely(valuesToValidate: any):
+  /*  validateSafely(valuesToValidate: any):
     | { validated: RTIValidated<T>; error?: false }
     | {
         validated?: false;
@@ -57,7 +66,7 @@ export class RTI<T extends RTInterface> {
       }
       throw new Error("This shouldn't happen");
     }
-  }
+  } */
 }
 class Optional {
   static get string() {
@@ -71,19 +80,20 @@ class Optional {
   }
 }
 
-class RTIValidated<T extends RTInterface> {
-  constructor(args: TRTIValidatorArgs<T>) {
-    RTIValidator.validate(args);
-    Object.assign(this, args.valuesToValidate);
-  }
-}
-
 // This causes the tests to crash ??
 /* const test: RTIValidated<{
   testProperty: RTIString;
 }> = new RTIValidated({} as any);
  */
 export namespace RTI {
+  export class Validated<T extends RTI<any>> {
+    readonly values: Readonly<RTI.ConvertToInterface<T>>;
+
+    public constructor(args: TRTIValidatorArgs) {
+      this.values = RTIValidator.validate(args);
+    }
+  }
+
   export type ConvertToInterface<T extends RTI<any>> = T extends RTI<infer U>
     ? Omit<
         {
@@ -97,14 +107,12 @@ export namespace RTI {
 
   type TOptional = RTIOptionalBool | RTIOptionalNumber | RTIOptionalString;
 
-  type Required<
-    R extends RTInterface,
-    K extends keyof R
-  > = R[K] extends TOptional ? never : K;
-  type Optional<
-    R extends RTInterface,
-    K extends keyof R
-  > = R[K] extends TOptional ? K : never;
+  type Required<R extends RTISchema, K extends keyof R> = R[K] extends TOptional
+    ? never
+    : K;
+  type Optional<R extends RTISchema, K extends keyof R> = R[K] extends TOptional
+    ? K
+    : never;
 
   type RTIToPrimitive<T> = T extends RTIString
     ? string
@@ -114,3 +122,10 @@ export namespace RTI {
     ? number
     : never;
 }
+
+
+const string = RTI.string;
+const number = RTI.number;
+const boolean = RTI.number;
+const optional = RTI.optional;
+export {string, number, boolean, optional};
