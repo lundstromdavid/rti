@@ -1,13 +1,13 @@
-import { RTI, string, number, optional  } from "../RTI";
+import { RTI} from "../RTI";
 
 
 const User = RTI.create({
-	id: string,
-	username: string.range(8, 25), 
-	password: string.range(8, 25),
-	email: string,
-	age: number,
-	subscribesToNewsletter: optional.boolean,
+	id: RTI.string,
+	username: RTI.string.range(8, 25), 
+	password: RTI.string.range(8, 25),
+	email: RTI.string,
+	age: RTI.number,
+	subscribesToNewsletter: RTI.optional.boolean,
 });
 
 type TUser = typeof User;

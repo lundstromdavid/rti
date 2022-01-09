@@ -146,8 +146,3 @@ export namespace RTI {
     : never;
 }
 
-const string = RTI.string;
-const number = RTI.number;
-const boolean = RTI.number;
-const optional = RTI.optional;
-export { string, number, boolean, optional };
