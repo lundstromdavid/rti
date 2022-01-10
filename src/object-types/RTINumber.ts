@@ -9,7 +9,7 @@ export type RTINumberProps = {
   maxValue?: number;
   integer?: boolean;
   divisibleBy?: number[];
-  customValidation?: TCustomValidationCallback<string>;
+  customValidation?: TCustomValidationCallback<number>;
 };
 
 export class RTINumber extends AbsRTIType<number> {
@@ -50,7 +50,7 @@ export class RTINumber extends AbsRTIType<number> {
   }
 
   validate(value: any): RTINumberValidationResult {
-	  return new RTINumberValidationResult();
+	  return new RTINumberValidationResult(value, this.props);
     /* return {
       discriminator: this.discriminator,
       customValidationPassed: false,

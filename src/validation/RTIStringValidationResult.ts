@@ -10,6 +10,7 @@ import { isNull } from "../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
 export class RTIStringValidationResult implements TStringValidation {
+  
   public readonly passed: boolean;
   public readonly discriminator: "string";
   public readonly correctType: TTypeConfirmation<string>;
@@ -22,7 +23,7 @@ export class RTIStringValidationResult implements TStringValidation {
   private confirmedValue: string;
 
   public constructor(
-    private readonly value: any,
+    value: any,
     private readonly args: RTIStringProps
   ) {
     const {
