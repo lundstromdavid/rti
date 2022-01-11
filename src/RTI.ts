@@ -120,9 +120,9 @@ export namespace RTI {
 
   export type ConvertToInterface<T extends RTI<any>> = T extends RTI<infer U>
     ? Omit<
-        {
+        /* {
           [key in keyof U as Required<U, key>]: RTIToPrimitive<U[key]>;
-        } & {
+        } &  */{
           [key in keyof U as Optional<U, key>]?: RTIToPrimitive<U[key]>;
         },
         ""
