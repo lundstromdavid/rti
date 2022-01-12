@@ -1,4 +1,4 @@
-export class ZeroOrLowerValueException extends Error  {
+export class NegativeValueException extends Error  {
 
 
 

@@ -1,4 +1,3 @@
-import { TRTIValidation } from "../object-types/ValidationTypes";
 import { RTI } from "../RTI";
 import { MUtils } from "../utils/MUtils";
 import { TCustomValidationCallback } from "../validation/PrimitiveValidator";
@@ -42,7 +41,10 @@ export class RTIString extends AbsRTIType<string> {
 
 
   private assertValidMinAndMaxLength() {
-    RTIValidation.assertMinHigherThanMax(this.props.minLength, this.props.maxLength);
+    const {minLength, maxLength} = this.props;
+    RTIValidation.assertNonNegative(minLength, maxLength);
+    RTIValidation.assertMinHigherThanMax(minLength, maxLength);
+    
   }
 
   public includesAll(

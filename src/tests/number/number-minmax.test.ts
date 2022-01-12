@@ -1,37 +1,116 @@
-import { RTIOptionalBool } from "../../object-types/RTIOptionalBool";
-import { RTIOptionalNumber } from "../../object-types/RTIOptionalNumber";
-import { RTIOptionalString } from "../../object-types/RTIOptionalString";
 import { RTI } from "../../RTI";
-const {number, optional} = RTI;
-
-const Example = RTI.create({
-	value1: optional.number.min(-50),
-	value2: optional.number.min(0),
-	value3: number.min(500),
-	value4: optional.string.min(5),
-});
-
-type TExample = typeof Example;
-type IExample = RTI.ConvertToInterface<TExample>;
-
-type TOptional = RTIOptionalBool | RTIOptionalNumber | RTIOptionalString;
-type Optional = RTIOptionalNumber;
-type Test = Optional extends TOptional ? true : false;
+const {optional} = RTI;
 
 
 describe("RTI number min max test", () => {
 
 	test("Min value", () => {
 
-		const example = RTI.create({
-			value1: optional.number.min(-50),
-			value2: optional.number.min(0),
-			value3: optional.number.min(500)
+		const Example = RTI.create({
+			negative: optional.number.min(-50),
+			zero: optional.number.min(0),
+			positive: optional.number.min(500)
 		});
 
-		const validate = (rti: RTI.ConvertToInterface<typeof example>) => example.validate(rti); 
+		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		
+		// Negative
+		expect(validate({
+			negative: -51 
+		})).toThrow();
+		
+		expect(validate({
+			negative: -100 
+		})).toThrow();
 
-		//expect(() => validate({})).toThrow();
+		expect(validate({
+			negative: -50 
+		})).not.toThrow();
+
+		expect(validate({
+			negative: 12345
+		})).not.toThrow();
+
+		// Zero
+		expect(validate({
+			zero: -1
+		})).toThrow();
+
+		expect(validate({
+			zero: 0
+		})).not.toThrow();
+
+		expect(validate({
+			zero: 1
+		})).not.toThrow();
+
+		// Positive
+		expect(validate({
+			positive: 450
+		})).toThrow();
+
+		expect(validate({
+			positive: 500
+		})).not.toThrow();
+
+		expect(validate({
+			positive: 54321
+		})).not.toThrow();
+
+	});
+
+	test("Max value", () => {
+
+		const Example = RTI.create({
+			negative: optional.number.max(-50),
+			zero: optional.number.max(0),
+			positive: optional.number.max(500)
+		});
+
+		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		
+		// Negative
+		expect(validate({
+			negative: -51 
+		})).not.toThrow();
+		
+		expect(validate({
+			negative: -100 
+		})).not.toThrow();
+
+		expect(validate({
+			negative: -50 
+		})).toThrow();
+
+		expect(validate({
+			negative: 12345
+		})).toThrow();
+
+		// Zero
+		expect(validate({
+			zero: -1
+		})).not.toThrow();
+
+		expect(validate({
+			zero: 0
+		})).toThrow();
+
+		expect(validate({
+			zero: 1
+		})).toThrow();
+
+		// Positive
+		expect(validate({
+			positive: 450
+		})).not.toThrow();
+
+		expect(validate({
+			positive: 500
+		})).toThrow();
+
+		expect(validate({
+			positive: 54321
+		})).toThrow();
 
 	});
 
