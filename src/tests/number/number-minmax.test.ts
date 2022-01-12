@@ -7,11 +7,12 @@ const {number, optional} = RTI;
 const Example = RTI.create({
 	value1: optional.number.min(-50),
 	value2: optional.number.min(0),
-	value3: optional.number.min(500),
+	value3: number.min(500),
 	value4: optional.string.min(5),
 });
 
 type TExample = typeof Example;
+type IExample = RTI.ConvertToInterface<TExample>;
 
 type TOptional = RTIOptionalBool | RTIOptionalNumber | RTIOptionalString;
 type Optional = RTIOptionalNumber;

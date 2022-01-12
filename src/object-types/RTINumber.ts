@@ -16,30 +16,32 @@ export class RTINumber extends AbsRTIType<number> {
   private readonly discriminator = "number";
   private readonly props: RTINumberProps = {};
 
-  public min(min: number): RTINumber {
+  public min(min: number) {
     this.props.minValue = min;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public max(max: number): RTINumber {
+  public max(max: number) {
     this.props.maxValue = max;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public range(min: number, max: number): RTINumber {
+  public range(min: number, max: number) {
     return this.min(min).max(max);
   }
 
   public integer() {
-	  this.props.integer = true;
+    this.props.integer = true;
+    return this;
   }
 
   public divisibleBy(nums: number | number[]) {
-	this.props.divisibleBy = MUtils.asArray(nums);
+    this.props.divisibleBy = MUtils.asArray(nums);
+    return this;
   }
 
   private assertValidMinAndMaxLength() {
@@ -50,7 +52,7 @@ export class RTINumber extends AbsRTIType<number> {
   }
 
   validate(value: any): RTINumberValidationResult {
-	  return new RTINumberValidationResult(value, this.props);
+    return new RTINumberValidationResult(value, this.props);
     /* return {
       discriminator: this.discriminator,
       customValidationPassed: false,

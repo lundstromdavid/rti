@@ -22,7 +22,7 @@ export class RTIString extends AbsRTIType<string> {
 
 
 
-  public min(min: number): RTIString {
+  public min(min: number) {
     this.props.minLength = min;
     this.assertValidMinAndMaxLength();
 
