@@ -1,43 +1,51 @@
 import { TPrimitive, TPrimitiveToString } from "../types/Primitive";
 
-export const RTIUnchecked: TRTIUnchecked = "unchecked";
-export type TRTIUnchecked = "unchecked";
-
 export type TPrimitiveToValidation<T extends TPrimitive> = T extends string
   ? TStringValidation
   : T extends number
   ? TNumberValidation
   : TBooleanValidation;
 
-export type TTypeConfirmation<T extends TPrimitive> =
-  | true
-  | {
-      expected: TPrimitiveToString<T>;
-      actual: string;
-    };
+export type TTypeCheck<T extends TPrimitive> = {
+  expected: TPrimitiveToString<T>;
+  actual: string;
+  passed: boolean;
+};
 
 export type TBaseValidation<T extends TPrimitive> = {
   discriminator: TPrimitiveToString<T>;
   passed: boolean;
-  correctType: TTypeConfirmation<T>;
-  customValidationPassed: boolean | TRTIUnchecked;
-}
+  typeCheck: TTypeCheck<T>;
+  customValidationPassed: ESingleValidation;
+};
 
 export interface TStringValidation extends TBaseValidation<string> {
-  longEnough: boolean | TRTIUnchecked;
-  notTooLong: boolean | TRTIUnchecked;
-  containsAllProvidedValues: boolean | TRTIUnchecked;
-  containsAtLeastOneProvidedValue: boolean | TRTIUnchecked;
+  longEnough: ESingleValidation;
+  notTooLong: ESingleValidation;
+  containsAllProvidedValues: ESingleValidation;
+  containsAtLeastOneProvidedValue: ESingleValidation;
 }
 
 export interface TNumberValidation extends TBaseValidation<number> {
-  bigEnough: boolean | TRTIUnchecked;
-  notTooBig: boolean | TRTIUnchecked;
-  passedIntegerCheck: boolean | TRTIUnchecked;
+  bigEnough: ESingleValidation;
+  notTooBig: ESingleValidation;
+  passedIntegerCheck: ESingleValidation;
 }
 
 export interface TBooleanValidation extends TBaseValidation<boolean> {}
 
-export type TRTIValidation<T extends TPrimitive> = TPrimitiveToValidation<T>
+export type TRTIValidation<T extends TPrimitive> = TPrimitiveToValidation<T>;
 
-export type TSingleValidation = TRTIUnchecked | boolean;
+export enum ESingleValidation {
+  unchecked,
+  noRestriction,
+  passed,
+  failed
+}
+
+export namespace ESingleValidation {
+  export function fromBool(passed: boolean): ESingleValidation {
+    return passed ? ESingleValidation.passed : ESingleValidation.failed;
+  }
+}
+

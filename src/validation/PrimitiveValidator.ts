@@ -1,15 +1,17 @@
 import {
-  RTIUnchecked, TRTIUnchecked,
-  TTypeConfirmation
+  ESingleValidation,
+  TTypeCheck as TTypeCheck,
 } from "../object-types/ValidationTypes";
 import { TPrimitive, TPrimitiveToString } from "../types/Primitive";
 
-export type TCustomValidationCallback<T extends TPrimitive> = (value: T) => boolean;
+export type TCustomValidationCallback<T extends TPrimitive> = (
+  value: T
+) => boolean;
 
 export class PrimitiveValidator<T extends TPrimitive> {
-  readonly passed: boolean;
-  readonly typeConfirmation: TTypeConfirmation<T>;
-  readonly customValidationPassed: boolean | TRTIUnchecked = RTIUnchecked;
+  readonly passedBaseTest: boolean = false;
+  readonly typeCheck: TTypeCheck<T>;
+  readonly customValidationPassed: ESingleValidation = ESingleValidation.unchecked;
 
   constructor(
     object: any,
@@ -17,18 +19,19 @@ export class PrimitiveValidator<T extends TPrimitive> {
     customValidation?: TCustomValidationCallback<T>
   ) {
     const actual = typeof object;
-    if (actual !== expected) {
-      this.passed = false;
-      this.typeConfirmation = {
-        actual,
-        expected,
-      };
-    } else {
+    this.typeCheck = {
+      actual,
+      expected,
+      passed: actual === expected,
+    };
+
+    if (this.typeCheck.passed) {
       if (customValidation) {
-        this.customValidationPassed = customValidation(object as T);
-        this.passed = this.customValidationPassed;
+        this.customValidationPassed = ESingleValidation.fromBool(customValidation(object as T));
+        this.passedBaseTest = this.customValidationPassed === ESingleValidation.passed;
       } else {
-        this.passed = true;
+        this.customValidationPassed = ESingleValidation.noRestriction;
+        this.passedBaseTest = true;
       }
     }
   }

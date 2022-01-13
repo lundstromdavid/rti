@@ -53,14 +53,5 @@ export class RTINumber extends AbsRTIType<number> {
 
   validate(value: any): RTINumberValidationResult {
     return new RTINumberValidationResult(value, this.props);
-    /* return {
-      discriminator: this.discriminator,
-      customValidationPassed: false,
-      passed: typeof value === "number",
-      correctType: true,
-      bigEnough: true,
-      notTooBig: true,
-      passedIntegerCheck: true,
-    }; */
   }
 }
