@@ -4,7 +4,7 @@ import { RTINumberValidationResult } from "../validation/RTINumberValidationResu
 import { RTIValidation } from "../validation/RTIValidation";
 import { AbsRTIType } from "./AbsRTIType";
 
-export type RTINumberProps = {
+export type RTINumberRules = {
   minValue?: number;
   maxValue?: number;
   integer?: boolean;
@@ -14,17 +14,17 @@ export type RTINumberProps = {
 
 export class RTINumber extends AbsRTIType<number> {
   private readonly discriminator = "number";
-  private readonly props: RTINumberProps = {};
+  private readonly rules: RTINumberRules = {};
 
   public min(min: number) {
-    this.props.minValue = min;
+    this.rules.minValue = min;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
   public max(max: number) {
-    this.props.maxValue = max;
+    this.rules.maxValue = max;
     this.assertValidMinAndMaxLength();
 
     return this;
@@ -35,23 +35,23 @@ export class RTINumber extends AbsRTIType<number> {
   }
 
   public integer() {
-    this.props.integer = true;
+    this.rules.integer = true;
     return this;
   }
 
   public divisibleBy(nums: number | number[]) {
-    this.props.divisibleBy = MUtils.asArray(nums);
+    this.rules.divisibleBy = MUtils.asArray(nums);
     return this;
   }
 
   private assertValidMinAndMaxLength() {
     RTIValidation.assertMinHigherThanMax(
-      this.props.minValue,
-      this.props.maxValue
+      this.rules.minValue,
+      this.rules.maxValue
     );
   }
 
   validate(value: any): RTINumberValidationResult {
-    return new RTINumberValidationResult(value, this.props);
+    return new RTINumberValidationResult(value, this.rules);
   }
 }

@@ -9,36 +9,43 @@ export type TRTIValidatorArgs = {
 };
 
 export class RTIValidator {
-  public static validate<T extends RTI<any>>(args: TRTIValidatorArgs): Readonly<RTI.ConvertToInterface<T>> {
+  public static validate<T extends RTI<any>>(
+    args: TRTIValidatorArgs
+  ): Readonly<RTI.ConvertToInterface<T>> {
     const { schema, valuesToValidate } = args;
 
     if (typeof valuesToValidate !== "object") {
-      throw RTIValidationError.passedValuesNotAnObject(valuesToValidate);
+      throw RTIValidationError.passedInValuesNotAnObject(valuesToValidate);
     }
 
     MUtils.entries(schema).forEach(([key, rtiObj]) => {
-      if (!(key in valuesToValidate)) {
+      if (key in valuesToValidate) {
+        
+        const val = valuesToValidate[key];
+        const validation = rtiObj.validate(val);
+  
+        if (!validation.passed) {
+          throw RTIValidationError.rulesNotFulfilled(
+            valuesToValidate,
+            validation,
+            key
+          );
+        }
+        
+      } else {
         if (!rtiObj.isOptional()) {
+          console.log({ key, isOptional: rtiObj.isOptional() });
           throw RTIValidationError.requiredEntryNotIncluded(
             valuesToValidate,
             key
           );
-        }
+        } 
       }
 
-      const val = valuesToValidate[key];
-
-      const validation = rtiObj.validate(val);
-
-      if (!validation.passed) {
-        throw RTIValidationError.validationFailedToPass(
-          valuesToValidate,
-          validation
-        );
-      }
+   
     });
 
-    const copy = {...valuesToValidate};
+    const copy = { ...valuesToValidate };
     Object.freeze(copy);
 
     return copy;

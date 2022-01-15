@@ -80,6 +80,10 @@ describe("RTI number min max test", () => {
 
 		expect(validate({
 			negative: -50 
+		})).not.toThrow();
+
+		expect(validate({
+			negative: -49 
 		})).toThrow();
 
 		expect(validate({
@@ -93,7 +97,7 @@ describe("RTI number min max test", () => {
 
 		expect(validate({
 			zero: 0
-		})).toThrow();
+		})).not.toThrow();
 
 		expect(validate({
 			zero: 1
@@ -106,6 +110,10 @@ describe("RTI number min max test", () => {
 
 		expect(validate({
 			positive: 500
+		})).not.toThrow();
+
+		expect(validate({
+			positive: 501
 		})).toThrow();
 
 		expect(validate({

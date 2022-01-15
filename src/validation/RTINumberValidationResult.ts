@@ -1,7 +1,7 @@
-import { RTINumberProps } from "../object-types/RTINumber";
+import { RTINumberRules } from "../object-types/RTINumber";
 import {
+  CriteriaValidation,
   TNumberValidation,
-  TSingleValidation,
   TTypeCheck
 } from "../object-types/ValidationTypes";
 import { isNull } from "../utils/NullCheck";
@@ -11,21 +11,21 @@ export class RTINumberValidationResult implements TNumberValidation {
   public readonly passed: boolean;
   public readonly discriminator = "number";
   public readonly typeCheck: TTypeCheck<number>;
-  public readonly passedIntegerCheck: TSingleValidation;
-  public readonly bigEnough: TSingleValidation;
-  public readonly notTooBig: TSingleValidation;
-  public readonly customValidationPassed: TSingleValidation;
+  public readonly passedIntegerCheck: CriteriaValidation;
+  public readonly bigEnough: CriteriaValidation;
+  public readonly notTooBig: CriteriaValidation;
+  public readonly customValidationPassed: CriteriaValidation;
 
   private confirmedValue: number;
 
-  public constructor(value: any, private readonly props: RTINumberProps) {
+  public constructor(value: any, private readonly rules: RTINumberRules) {
     const {
       passedBaseTest,
       customValidationPassed,
       typeCheck,
-    } = new PrimitiveValidator<number>(value, "number", props.customValidation);
+    } = new PrimitiveValidator<number>(value, "number", rules.customValidation);
 
-    console.log({passedBaseTest, customValidationPassed, typeCheck, value, props});
+    //console.log({passedBaseTest, customValidationPassed, typeCheck, value, props: rules});
 
     this.typeCheck = typeCheck;
     this.customValidationPassed = customValidationPassed;
@@ -43,22 +43,22 @@ export class RTINumberValidationResult implements TNumberValidation {
 
   private checkPassed(): boolean {
     return [this.customValidationPassed, this.passedIntegerCheck, this.bigEnough, this.notTooBig].every(
-      (val) => val
+      (val) => val !== CriteriaValidation.failed
     );
   }
 
-  private checkInteger(): boolean {
-    if (!this.props.integer) return true;
-    return Number.isInteger(this.confirmedValue);
+  private checkInteger(): CriteriaValidation {
+    if (!this.rules.integer) return CriteriaValidation.noRestriction;
+    return CriteriaValidation.fromBool(Number.isInteger(this.confirmedValue));
   }
 
-  private checkBigEnough(): boolean {
-    if (isNull(this.props.minValue)) return true;
-    return this.confirmedValue >= this.props.minValue;
+  private checkBigEnough(): CriteriaValidation {
+    if (isNull(this.rules.minValue)) return CriteriaValidation.noRestriction;
+    return CriteriaValidation.fromBool(this.confirmedValue >= this.rules.minValue);
   }
 
-  private checkNotTooBig(): boolean {
-    if (isNull(this.props.maxValue)) return true;
-    return this.confirmedValue <= this.props.maxValue;
+  private checkNotTooBig(): CriteriaValidation {
+    if (isNull(this.rules.maxValue)) return CriteriaValidation.noRestriction;
+    return CriteriaValidation.fromBool(this.confirmedValue <= this.rules.maxValue);
   }
 }

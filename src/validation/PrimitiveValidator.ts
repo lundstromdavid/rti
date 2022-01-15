@@ -1,5 +1,5 @@
 import {
-  ESingleValidation,
+  CriteriaValidation,
   TTypeCheck as TTypeCheck,
 } from "../object-types/ValidationTypes";
 import { TPrimitive, TPrimitiveToString } from "../types/Primitive";
@@ -11,7 +11,7 @@ export type TCustomValidationCallback<T extends TPrimitive> = (
 export class PrimitiveValidator<T extends TPrimitive> {
   readonly passedBaseTest: boolean = false;
   readonly typeCheck: TTypeCheck<T>;
-  readonly customValidationPassed: ESingleValidation = ESingleValidation.unchecked;
+  readonly customValidationPassed: CriteriaValidation = CriteriaValidation.unchecked;
 
   constructor(
     object: any,
@@ -27,10 +27,10 @@ export class PrimitiveValidator<T extends TPrimitive> {
 
     if (this.typeCheck.passed) {
       if (customValidation) {
-        this.customValidationPassed = ESingleValidation.fromBool(customValidation(object as T));
-        this.passedBaseTest = this.customValidationPassed === ESingleValidation.passed;
+        this.customValidationPassed = CriteriaValidation.fromBool(customValidation(object as T));
+        this.passedBaseTest = this.customValidationPassed === CriteriaValidation.passed;
       } else {
-        this.customValidationPassed = ESingleValidation.noRestriction;
+        this.customValidationPassed = CriteriaValidation.noRestriction;
         this.passedBaseTest = true;
       }
     }

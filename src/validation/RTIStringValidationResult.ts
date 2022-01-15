@@ -1,6 +1,6 @@
 import { RTIStringProps } from "../object-types/RTIString";
 import {
-  ESingleValidation,
+  CriteriaValidation,
   TStringValidation,
   TTypeCheck,
 } from "../object-types/ValidationTypes";
@@ -12,11 +12,11 @@ export class RTIStringValidationResult implements TStringValidation {
   public readonly passed: boolean;
   public readonly discriminator: "string";
   public readonly typeCheck: TTypeCheck<string>;
-  public readonly customValidationPassed: ESingleValidation;
-  public readonly longEnough: ESingleValidation;
-  public readonly notTooLong: ESingleValidation;
-  public readonly containsAllProvidedValues: ESingleValidation;
-  public readonly containsAtLeastOneProvidedValue: ESingleValidation;
+  public readonly customValidationPassed: CriteriaValidation;
+  public readonly longEnough: CriteriaValidation;
+  public readonly notTooLong: CriteriaValidation;
+  public readonly containsAllProvidedValues: CriteriaValidation;
+  public readonly containsAtLeastOneProvidedValue: CriteriaValidation;
 
   private confirmedValue: string;
 
@@ -45,22 +45,22 @@ export class RTIStringValidationResult implements TStringValidation {
       this.notTooLong,
       this.containsAllProvidedValues,
       this.containsAtLeastOneProvidedValue,
-    ].every((val) => val !== ESingleValidation.failed);
+    ].every((val) => val !== CriteriaValidation.failed);
   }
 
-  private checkLongEnough(): ESingleValidation {
+  private checkLongEnough(): CriteriaValidation {
     const { minLength } = this.args;
-    if (isNull(minLength)) return ESingleValidation.noRestriction;
-    return ESingleValidation.fromBool(this.confirmedValue.length >= minLength);
+    if (isNull(minLength)) return CriteriaValidation.noRestriction;
+    return CriteriaValidation.fromBool(this.confirmedValue.length >= minLength);
   }
-  private checkNotTooLong(): ESingleValidation {
+  private checkNotTooLong(): CriteriaValidation {
     const { maxLength } = this.args;
-    if (isNull(maxLength)) return ESingleValidation.noRestriction;
-    return ESingleValidation.fromBool(this.confirmedValue.length <= maxLength);
+    if (isNull(maxLength)) return CriteriaValidation.noRestriction;
+    return CriteriaValidation.fromBool(this.confirmedValue.length <= maxLength);
   }
-  private checkContainsAll(): ESingleValidation {
+  private checkContainsAll(): CriteriaValidation {
     const { includesAllCaseSensitive, includesAllCaseInsensitive } = this.args;
-    return ESingleValidation.fromBool(
+    return CriteriaValidation.fromBool(
       this.checkContains(
         includesAllCaseSensitive,
         RTI.Case.sensitive,
@@ -74,10 +74,10 @@ export class RTIStringValidationResult implements TStringValidation {
     );
   }
 
-  private checkContainsSome(): ESingleValidation {
+  private checkContainsSome(): CriteriaValidation {
     const { includesSomeCaseSensitive, includesSomeCaseInsensitive } =
       this.args;
-    return ESingleValidation.fromBool(
+    return CriteriaValidation.fromBool(
       this.checkContains(
         includesSomeCaseSensitive,
         RTI.Case.sensitive,

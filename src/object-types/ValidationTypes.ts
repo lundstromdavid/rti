@@ -16,36 +16,36 @@ export type TBaseValidation<T extends TPrimitive> = {
   discriminator: TPrimitiveToString<T>;
   passed: boolean;
   typeCheck: TTypeCheck<T>;
-  customValidationPassed: ESingleValidation;
+  customValidationPassed: CriteriaValidation;
 };
 
 export interface TStringValidation extends TBaseValidation<string> {
-  longEnough: ESingleValidation;
-  notTooLong: ESingleValidation;
-  containsAllProvidedValues: ESingleValidation;
-  containsAtLeastOneProvidedValue: ESingleValidation;
+  longEnough: CriteriaValidation;
+  notTooLong: CriteriaValidation;
+  containsAllProvidedValues: CriteriaValidation;
+  containsAtLeastOneProvidedValue: CriteriaValidation;
 }
 
 export interface TNumberValidation extends TBaseValidation<number> {
-  bigEnough: ESingleValidation;
-  notTooBig: ESingleValidation;
-  passedIntegerCheck: ESingleValidation;
+  bigEnough: CriteriaValidation;
+  notTooBig: CriteriaValidation;
+  passedIntegerCheck: CriteriaValidation;
 }
 
 export interface TBooleanValidation extends TBaseValidation<boolean> {}
 
 export type TRTIValidation<T extends TPrimitive> = TPrimitiveToValidation<T>;
 
-export enum ESingleValidation {
-  unchecked,
-  noRestriction,
-  passed,
-  failed
+export enum CriteriaValidation {
+  unchecked = "unchecked",
+  noRestriction = "no_restriction",
+  passed = "passed",
+  failed = "failed"
 }
 
-export namespace ESingleValidation {
-  export function fromBool(passed: boolean): ESingleValidation {
-    return passed ? ESingleValidation.passed : ESingleValidation.failed;
+export namespace CriteriaValidation {
+  export function fromBool(passed: boolean): CriteriaValidation {
+    return passed ? CriteriaValidation.passed : CriteriaValidation.failed;
   }
 }
 
