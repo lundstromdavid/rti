@@ -1,0 +1,3 @@
+String tests -
+* test includes some
+* test exact length

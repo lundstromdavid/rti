@@ -1,5 +1,4 @@
-import { RTINumericLiteral } from "../../object-types/primitive/RTINumericLiteral";
-import { numericLiteral, RTI } from "../../RTI"
+import { numericLiteral, RTI } from "../../RTI";
 
 
 describe("RTI numeric literal tests", () => {

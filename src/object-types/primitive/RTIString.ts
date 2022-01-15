@@ -21,22 +21,26 @@ export class RTIString extends AbsRTIObject<string> {
 
 
 
-  public min(min: number) {
+  public minLength(min: number) {
     this.props.minLength = min;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public max(max: number): RTIString {
+  public maxLength(max: number): RTIString {
     this.props.maxLength = max;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public range(min: number, max: number): RTIString {
-    return this.min(min).max(max);
+  public lengthInRange(min: number, max: number): RTIString {
+    return this.minLength(min).maxLength(max);
+  }
+
+  public exactLength(length: number) {
+    return this.minLength(length).maxLength(length);
   }
 
 
