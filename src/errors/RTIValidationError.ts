@@ -1,5 +1,5 @@
-import { TRTIValidation } from "../object-types/ValidationTypes";
 import { TPrimitive } from "../types/Primitive";
+import { ValidationHelper } from "../validation/ValidationHelper";
 
 export enum EValidationError {
   passedInValuesNotAnObject = "Passed in values not an object",
@@ -7,20 +7,20 @@ export enum EValidationError {
   criteriaNotMet =  "Criteria not met",
 }
 
-interface IErrorArgs<T extends TPrimitive> {
+interface IErrorArgs<T extends TPrimitive, Literal extends boolean> {
   error: EValidationError;
   valuesPassedIn: any;
   failedOnProperty?: string | number | symbol;
-  results?: TRTIValidation<T>;
+  results?: ValidationHelper.Result<T, Literal>;
 }
 
-export class RTIValidationError<T extends TPrimitive> implements IErrorArgs<T> {
+export class RTIValidationError<T extends TPrimitive, Literal extends boolean> implements IErrorArgs<T, Literal> {
   readonly error: EValidationError;
   readonly valuesPassedIn: any;
   readonly failedOnProperty?: string | number | symbol;
-  readonly results?: TRTIValidation<T>;
+  readonly results?: ValidationHelper.Result<T, Literal>;
 
-  private constructor(args: IErrorArgs<T>) {
+  private constructor(args: IErrorArgs<T, Literal>) {
     Object.setPrototypeOf(this, RTIValidationError.prototype);
     Object.assign(this, args);
   }
@@ -34,7 +34,7 @@ export class RTIValidationError<T extends TPrimitive> implements IErrorArgs<T> {
 
   public static requiredEntryNotIncluded(
     valuesPassedIn: any,
-    failedOnProperty: IErrorArgs<any>["failedOnProperty"]
+    failedOnProperty: IErrorArgs<any, any>["failedOnProperty"]
   ) {
     return new RTIValidationError({
       error: EValidationError.requiredEntryNotIncluded,
@@ -43,10 +43,10 @@ export class RTIValidationError<T extends TPrimitive> implements IErrorArgs<T> {
     });
   }
 
-  public static rulesNotFulfilled<T extends TPrimitive>(
+  public static criteriaNotMet<T extends TPrimitive, Literal extends boolean>(
     valuesPassedIn: any,
-    results: TRTIValidation<T>,
-    failedOnProperty: IErrorArgs<any>["failedOnProperty"]
+    results: ValidationHelper.Result<T, Literal>,
+    failedOnProperty: IErrorArgs<any, any>["failedOnProperty"]
   ) {
     return new RTIValidationError({
       error: EValidationError.criteriaNotMet,

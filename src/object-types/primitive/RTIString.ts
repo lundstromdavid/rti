@@ -1,9 +1,9 @@
-import { RTI } from "../RTI";
-import { MUtils } from "../utils/MUtils";
-import { TCustomValidationCallback } from "../validation/PrimitiveValidator";
-import { RTIStringValidationResult } from "../validation/RTIStringValidationResult";
-import { RTIValidation } from "../validation/RTIValidation";
-import { AbsRTIType } from "./AbsRTIType";
+import { RTI } from "../../RTI";
+import { MUtils } from "../../utils/MUtils";
+import { TCustomValidationCallback } from "../../validation/primitive/PrimitiveValidator";
+import { StringValidationResult } from "../../validation/primitive/StringValidationResult";
+import { ValidationHelper } from "../../validation/ValidationHelper";
+import { AbsRTIObject } from "../AbsRTIObject";
 
 export type RTIStringProps = {
   minLength?: number;
@@ -15,7 +15,7 @@ export type RTIStringProps = {
   customValidation?: TCustomValidationCallback<string>;
 };
 
-export class RTIString extends AbsRTIType<string> {
+export class RTIString extends AbsRTIObject<string> {
   private readonly discriminator = "RTIString";
   private readonly props: RTIStringProps = {};
 
@@ -42,8 +42,8 @@ export class RTIString extends AbsRTIType<string> {
 
   private assertValidMinAndMaxLength() {
     const {minLength, maxLength} = this.props;
-    RTIValidation.assertNonNegative(minLength, maxLength);
-    RTIValidation.assertMinHigherThanMax(minLength, maxLength);
+    ValidationHelper.assertNonNegative(minLength, maxLength);
+    ValidationHelper.assertMinHigherThanMax(minLength, maxLength);
     
   }
 
@@ -77,7 +77,7 @@ export class RTIString extends AbsRTIType<string> {
     return this;
   }
 
-  public validate(value: any): RTIStringValidationResult {
-    return new RTIStringValidationResult(value, this.props);
+  public validate(value: any): StringValidationResult {
+    return new StringValidationResult(value, this.props);
   }
 }

@@ -1,13 +1,13 @@
-import { RTINumberRules } from "../object-types/RTINumber";
+import { RTINumberRules } from "../../object-types/primitive/RTINumber";
 import {
   CriteriaValidation,
-  TNumberValidation,
+  INumberValidation,
   TTypeCheck
-} from "../object-types/ValidationTypes";
-import { isNull } from "../utils/NullCheck";
+} from "../ValidationTypes";
+import { isNull } from "../../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
-export class RTINumberValidationResult implements TNumberValidation {
+export class NumberValidationResult implements INumberValidation {
   public readonly passed: boolean;
   public readonly discriminator = "number";
   public readonly typeCheck: TTypeCheck<number>;

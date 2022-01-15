@@ -1,8 +1,8 @@
 import {
   CriteriaValidation,
   TTypeCheck as TTypeCheck,
-} from "../object-types/ValidationTypes";
-import { TPrimitive, TPrimitiveToString } from "../types/Primitive";
+} from "../ValidationTypes";
+import { TPrimitive, TPrimitiveToString } from "../../types/Primitive";
 
 export type TCustomValidationCallback<T extends TPrimitive> = (
   value: T

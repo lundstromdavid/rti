@@ -1,14 +1,14 @@
-import { RTIStringProps } from "../object-types/RTIString";
+import { RTIStringProps } from "../../object-types/primitive/RTIString";
 import {
   CriteriaValidation,
-  TStringValidation,
+  IStringValidation,
   TTypeCheck,
-} from "../object-types/ValidationTypes";
-import { RTI } from "../RTI";
-import { isNull } from "../utils/NullCheck";
+} from "../ValidationTypes";
+import { RTI } from "../../RTI";
+import { isNull } from "../../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
-export class RTIStringValidationResult implements TStringValidation {
+export class StringValidationResult implements IStringValidation {
   public readonly passed: boolean;
   public readonly discriminator: "string";
   public readonly typeCheck: TTypeCheck<string>;

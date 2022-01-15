@@ -25,7 +25,7 @@ export class RTIValidator {
         const validation = rtiObj.validate(val);
   
         if (!validation.passed) {
-          throw RTIValidationError.rulesNotFulfilled(
+          throw RTIValidationError.criteriaNotMet(
             valuesToValidate,
             validation,
             key

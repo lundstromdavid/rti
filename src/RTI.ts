@@ -1,10 +1,10 @@
-import { RTIValidationError } from "./errors/RTIValidationError";
-import { RTIBool } from "./object-types/RTIBool";
-import { RTINumber } from "./object-types/RTINumber";
-import { RTIOptionalBool } from "./object-types/RTIOptionalBool";
-import { RTIOptionalNumber } from "./object-types/RTIOptionalNumber";
-import { RTIOptionalString } from "./object-types/RTIOptionalString";
-import { RTIString } from "./object-types/RTIString";
+import { RTIOptionalBool } from "./object-types/optionals/RTIOptionalBool";
+import { RTIOptionalNumber } from "./object-types/optionals/RTIOptionalNumber";
+import { RTIOptionalString } from "./object-types/optionals/RTIOptionalString";
+import { RTIBool } from "./object-types/primitive/RTIBool";
+import { RTINumber } from "./object-types/primitive/RTINumber";
+import { RTINumericLiteral } from "./object-types/primitive/RTINumericLiteral";
+import { RTIString } from "./object-types/primitive/RTIString";
 import { RTIValidator, TRTIValidatorArgs } from "./RTIValidator";
 import { RTISchema } from "./types/RTISchema";
 import assert from "./utils/Assert";
@@ -115,7 +115,7 @@ export namespace RTI {
 
   export enum Case {
     sensitive,
-    insensitive
+    insensitive,
   }
 
   export type ConvertToInterface<T extends RTI<any>> = T extends RTI<infer U>
@@ -144,6 +144,15 @@ export namespace RTI {
     ? boolean
     : T extends RTINumber
     ? number
+    : T extends RTINumericLiteral<infer Numbers>
+    ? Numbers
     : never;
 }
 
+export const string = () => RTI.string;
+export const number = () => RTI.number;
+export function numericLiteral<T extends number>(...args: T[]) {
+  return new RTINumericLiteral<T>(...args);
+}
+export const boolean = () => RTI.boolean;
+export const optional = () => RTI.optional;

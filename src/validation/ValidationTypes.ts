@@ -1,10 +1,6 @@
 import { TPrimitive, TPrimitiveToString } from "../types/Primitive";
 
-export type TPrimitiveToValidation<T extends TPrimitive> = T extends string
-  ? TStringValidation
-  : T extends number
-  ? TNumberValidation
-  : TBooleanValidation;
+
 
 export type TTypeCheck<T extends TPrimitive> = {
   expected: TPrimitiveToString<T>;
@@ -12,29 +8,33 @@ export type TTypeCheck<T extends TPrimitive> = {
   passed: boolean;
 };
 
-export type TBaseValidation<T extends TPrimitive> = {
-  discriminator: TPrimitiveToString<T>;
+interface IBaseValidation<T extends TPrimitive> {
   passed: boolean;
   typeCheck: TTypeCheck<T>;
-  customValidationPassed: CriteriaValidation;
 };
 
-export interface TStringValidation extends TBaseValidation<string> {
+export interface IStringValidation extends IBaseValidation<string> {
   longEnough: CriteriaValidation;
   notTooLong: CriteriaValidation;
   containsAllProvidedValues: CriteriaValidation;
   containsAtLeastOneProvidedValue: CriteriaValidation;
+  customValidationPassed: CriteriaValidation;
 }
 
-export interface TNumberValidation extends TBaseValidation<number> {
+export interface INumberValidation extends IBaseValidation<number> {
   bigEnough: CriteriaValidation;
   notTooBig: CriteriaValidation;
   passedIntegerCheck: CriteriaValidation;
+  customValidationPassed: CriteriaValidation;
 }
 
-export interface TBooleanValidation extends TBaseValidation<boolean> {}
+export interface IBooleanValidation extends IBaseValidation<boolean> {}
 
-export type TRTIValidation<T extends TPrimitive> = TPrimitiveToValidation<T>;
+export interface INumericLiteralValidation extends IBaseValidation<number> {
+  valueAllowed: CriteriaValidation;
+}
+
+
 
 export enum CriteriaValidation {
   unchecked = "unchecked",

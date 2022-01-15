@@ -1,8 +1,8 @@
-import { MUtils } from "../utils/MUtils";
-import { TCustomValidationCallback } from "../validation/PrimitiveValidator";
-import { RTINumberValidationResult } from "../validation/RTINumberValidationResult";
-import { RTIValidation } from "../validation/RTIValidation";
-import { AbsRTIType } from "./AbsRTIType";
+import { MUtils } from "../../utils/MUtils";
+import { TCustomValidationCallback } from "../../validation/primitive/PrimitiveValidator";
+import { NumberValidationResult } from "../../validation/primitive/NumberValidationResult";
+import { ValidationHelper } from "../../validation/ValidationHelper";
+import { AbsRTIObject } from "../AbsRTIObject";
 
 export type RTINumberRules = {
   minValue?: number;
@@ -12,7 +12,7 @@ export type RTINumberRules = {
   customValidation?: TCustomValidationCallback<number>;
 };
 
-export class RTINumber extends AbsRTIType<number> {
+export class RTINumber extends AbsRTIObject<number> {
   private readonly discriminator = "number";
   private readonly rules: RTINumberRules = {};
 
@@ -45,13 +45,13 @@ export class RTINumber extends AbsRTIType<number> {
   }
 
   private assertValidMinAndMaxLength() {
-    RTIValidation.assertMinHigherThanMax(
+    ValidationHelper.assertMinHigherThanMax(
       this.rules.minValue,
       this.rules.maxValue
     );
   }
 
-  validate(value: any): RTINumberValidationResult {
-    return new RTINumberValidationResult(value, this.rules);
+  validate(value: any): NumberValidationResult {
+    return new NumberValidationResult(value, this.rules);
   }
 }
