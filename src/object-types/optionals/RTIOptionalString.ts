@@ -1,10 +1,11 @@
 import { RTIString } from "../primitive/RTIString";
+import { IOptional } from "./IOptional";
 
-export class RTIOptionalString extends RTIString {
+export class RTIOptionalString extends RTIString implements IOptional {
 
-	private readonly optionalClassDiscrimnator = "optional";
+	readonly optionalDiscriminator = "optionalDiscriminator";
 
-	isOptional() {
+	isOptional(): true {
 		return true;
 	}
 

@@ -1,6 +1,9 @@
+import { IOptional } from "./object-types/optionals/IOptional";
 import { RTIOptionalBool } from "./object-types/optionals/RTIOptionalBool";
 import { RTIOptionalNumber } from "./object-types/optionals/RTIOptionalNumber";
+import { RTIOptionalNumericLiteral } from "./object-types/optionals/RTIOptionalNumericLiteral";
 import { RTIOptionalString } from "./object-types/optionals/RTIOptionalString";
+import { RTIOptionalStringLiteral } from "./object-types/optionals/RTIOptionalStringLiteral";
 import { RTIBool } from "./object-types/primitive/RTIBool";
 import { RTINumber } from "./object-types/primitive/RTINumber";
 import { RTINumericLiteral } from "./object-types/primitive/RTINumericLiteral";
@@ -98,6 +101,12 @@ class Optional {
   static get boolean() {
     return new RTIOptionalBool();
   }
+  static stringLiteral<T extends string>(...values: T[]) {
+    return new RTIOptionalStringLiteral<T>(...values);
+  }
+  static numericLiteral<T extends number>(...values: T[]) {
+    return new RTIOptionalNumericLiteral<T>(...values);
+  }
 }
 
 // This causes the tests to crash ??
@@ -130,12 +139,10 @@ export namespace RTI {
       >
     : never;
 
-  type TOptional = RTIOptionalBool | RTIOptionalNumber | RTIOptionalString;
-
-  type Required<R extends RTISchema, K extends keyof R> = R[K] extends TOptional
+  type Required<R extends RTISchema, K extends keyof R> = R[K] extends IOptional
     ? never
     : K;
-  type Optional<R extends RTISchema, K extends keyof R> = R[K] extends TOptional
+  type Optional<R extends RTISchema, K extends keyof R> = R[K] extends IOptional
     ? K
     : never;
 

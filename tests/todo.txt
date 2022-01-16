@@ -1,3 +1,10 @@
 String tests -
 * test includes some
 * test exact length
+
+Literals -
+* Force at least one value, both in type checking and in runtime
+?* Type check no duplicates
+
+RTI - 
+* Fix validateSafely()

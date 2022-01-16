@@ -1,10 +1,11 @@
 import { RTINumber } from "../primitive/RTINumber";
+import { IOptional } from "./IOptional";
 
-export class RTIOptionalNumber extends RTINumber {
+export class RTIOptionalNumber extends RTINumber implements IOptional {
 
-	private readonly optionalClassDiscrimnator = "optional";
+	readonly optionalDiscriminator = "optionalDiscriminator";
 	
-	isOptional() {
+	isOptional(): true {
 		return true;
 	}
 }

@@ -1,10 +1,11 @@
 import { RTIBool } from "../primitive/RTIBool";
+import { IOptional } from "./IOptional";
 
-export class RTIOptionalBool extends RTIBool {
+export class RTIOptionalBool extends RTIBool implements IOptional {
 
-	private readonly optionalClassDiscrimnator = "optional";
+	readonly optionalDiscriminator = "optionalDiscriminator";
 
-	isOptional() {
+	isOptional(): true {
 		return true;
 	}
 

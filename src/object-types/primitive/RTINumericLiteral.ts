@@ -1,4 +1,3 @@
-import { NegativeValueException } from "../../exceptions/ZeroOrLowerException";
 import { NumericLiteralValidationResult } from "../../validation/primitive/NumericLiteralValidationResult";
 import { AbsRTIObject } from "../AbsRTIObject";
 
@@ -11,6 +10,7 @@ export class RTINumericLiteral<T extends number> extends AbsRTIObject<number, tr
 	constructor(...allowedValues: T[]) {
 		super();
 		this.allowedValues = allowedValues;
+		
 		this.confirmOnlyNumbers();
 		this.confirmNoDuplicates();
 	}
