@@ -1,4 +1,4 @@
-import { RTI, string } from "../../RTI";
+import { RTI, string } from "../../src/RTI";
 
 // MIN LENGTH
 

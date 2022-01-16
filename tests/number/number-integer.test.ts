@@ -1,4 +1,4 @@
-import { number, RTI } from "../../RTI";
+import { number, RTI } from "../../src/RTI";
 
 
 

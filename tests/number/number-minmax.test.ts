@@ -1,4 +1,4 @@
-import { RTI } from "../../RTI";
+import { RTI } from "../../src/RTI";
 const {optional} = RTI;
 
 

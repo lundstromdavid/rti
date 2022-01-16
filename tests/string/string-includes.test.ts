@@ -1,4 +1,4 @@
-import { RTI } from "../../RTI";
+import { RTI } from "../../src/RTI";
 
 describe("RTI string includes functionality", () => {
   test("includes all - case sensitive", () => {

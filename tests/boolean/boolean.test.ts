@@ -1,4 +1,4 @@
-import { boolean, RTI } from "../../RTI";
+import { boolean, RTI } from "../../src/RTI";
 
 
 

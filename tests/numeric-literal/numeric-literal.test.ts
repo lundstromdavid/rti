@@ -1,4 +1,4 @@
-import { numericLiteral, RTI } from "../../RTI";
+import { numericLiteral, RTI } from "../../src/RTI";
 
 
 describe("RTI numeric literal tests", () => {
