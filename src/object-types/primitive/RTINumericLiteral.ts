@@ -2,9 +2,6 @@ import { NegativeValueException } from "../../exceptions/ZeroOrLowerException";
 import { NumericLiteralValidationResult } from "../../validation/primitive/NumericLiteralValidationResult";
 import { AbsRTIObject } from "../AbsRTIObject";
 
-type InferNumbers<T extends number[]> = T;
-
-
 
 export class RTINumericLiteral<T extends number> extends AbsRTIObject<number, true> {
 

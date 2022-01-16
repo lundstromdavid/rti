@@ -9,3 +9,4 @@ export class RTIOptionalBool extends RTIBool {
 	}
 
 }
+

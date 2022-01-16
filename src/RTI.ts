@@ -5,6 +5,7 @@ import { RTIBool } from "./object-types/primitive/RTIBool";
 import { RTINumber } from "./object-types/primitive/RTINumber";
 import { RTINumericLiteral } from "./object-types/primitive/RTINumericLiteral";
 import { RTIString } from "./object-types/primitive/RTIString";
+import { RTIStringLiteral } from "./object-types/primitive/RTIStringLiteral";
 import { RTIValidator, TRTIValidatorArgs } from "./RTIValidator";
 import { RTISchema } from "./types/RTISchema";
 import assert from "./utils/Assert";
@@ -140,6 +141,8 @@ export namespace RTI {
 
   type RTIToPrimitive<T> = T extends RTIString
     ? string
+    : T extends RTIStringLiteral<infer Strings>
+    ? Strings
     : T extends RTIBool
     ? boolean
     : T extends RTINumber
@@ -150,9 +153,13 @@ export namespace RTI {
 }
 
 export const string = () => RTI.string;
+export function stringLiteral<T extends string>(...args: T[]) {
+  return new RTIStringLiteral<T>(...args);
+}
 export const number = () => RTI.number;
 export function numericLiteral<T extends number>(...args: T[]) {
   return new RTINumericLiteral<T>(...args);
 }
+
 export const boolean = () => RTI.boolean;
 export const optional = () => RTI.optional;

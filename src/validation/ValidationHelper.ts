@@ -6,6 +6,7 @@ import { notNull } from "../utils/NullCheck";
 import { BooleanValidationResult } from "./primitive/BooleanValidationResult";
 import { NumberValidationResult } from "./primitive/NumberValidationResult";
 import { NumericLiteralValidationResult } from "./primitive/NumericLiteralValidationResult";
+import { StringLiteralValidationResult } from "./primitive/StringLiteralValidationResult";
 import { StringValidationResult } from "./primitive/StringValidationResult";
 
 export class ValidationHelper {
@@ -28,7 +29,9 @@ export namespace ValidationHelper {
     T extends TPrimitive,
     Literal extends boolean
   > = T extends string
-    ? StringValidationResult
+    ? Literal extends true 
+    ? StringLiteralValidationResult
+    : StringValidationResult
     : T extends number
     ? Literal extends true
       ? NumericLiteralValidationResult

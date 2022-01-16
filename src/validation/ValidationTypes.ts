@@ -34,6 +34,10 @@ export interface INumericLiteralValidation extends IBaseValidation<number> {
   valueAllowed: CriteriaValidation;
 }
 
+export interface IStringLiteralValidation extends IBaseValidation<string> {
+  valueAllowed: CriteriaValidation;
+}
+
 
 
 export enum CriteriaValidation {
