@@ -1,5 +1,12 @@
 import { MinHigherThanMax } from "../exceptions/MinHigherThanMax";
-import { NegativeValueException } from "../exceptions/ZeroOrLowerException";
+import { NegativeValueException } from "../exceptions/NegativeValueException";
+import { RTIBool } from "../classes/primitive/RTIBool";
+import { RTINumber } from "../classes/primitive/RTINumber";
+import { RTINumericLiteral } from "../classes/primitive/RTINumericLiteral";
+import { RTIString } from "../classes/primitive/RTIString";
+import { RTIStringLiteral } from "../classes/primitive/RTIStringLiteral";
+import { RTIClass } from "../classes/RTIClass";
+import { RTIUnion } from "../classes/RTIUnion";
 import { TPrimitive } from "../types/Primitive";
 import assert from "../utils/Assert";
 import { notNull } from "../utils/NullCheck";
@@ -8,6 +15,7 @@ import { NumberValidationResult } from "./primitive/NumberValidationResult";
 import { NumericLiteralValidationResult } from "./primitive/NumericLiteralValidationResult";
 import { StringLiteralValidationResult } from "./primitive/StringLiteralValidationResult";
 import { StringValidationResult } from "./primitive/StringValidationResult";
+import { UnionValidationResult } from "./UnionValidationResult";
 
 export class ValidationHelper {
   static assertMinHigherThanMax(min: number, max: number) {
@@ -24,14 +32,22 @@ export class ValidationHelper {
   }
 }
 
-export namespace ValidationHelper {
+export namespace ValidationTypes {
+  export type All =
+    | StringValidationResult
+    | StringLiteralValidationResult
+    | NumberValidationResult
+    | NumericLiteralValidationResult
+    | BooleanValidationResult
+    | UnionValidationResult;
+
   export type Result<
     T extends TPrimitive,
     Literal extends boolean
   > = T extends string
-    ? Literal extends true 
-    ? StringLiteralValidationResult
-    : StringValidationResult
+    ? Literal extends true
+      ? StringLiteralValidationResult
+      : StringValidationResult
     : T extends number
     ? Literal extends true
       ? NumericLiteralValidationResult
@@ -39,4 +55,42 @@ export namespace ValidationHelper {
     : T extends boolean
     ? BooleanValidationResult
     : never;
+
+/*   export type ToResult<T extends RTIObject<any>> = T extends RTIString
+    ? StringValidationResult
+    : //
+    T extends RTIStringLiteral<any>
+    ? StringLiteralValidationResult
+    : //
+    T extends RTINumber
+    ? NumberValidationResult
+    : //
+    T extends RTINumericLiteral<any>
+    ? NumericLiteralValidationResult
+    : //
+    T extends RTIBool
+    ? BooleanValidationResult
+    : //
+    T extends RTIUnion<infer Objects>
+    ? ToResult<Objects>
+    : never;
+
+  export type ToType<T extends RTIObject> = T extends RTIString
+    ? string
+    : //
+    T extends RTIStringLiteral<infer Values>
+    ? Values
+    : //
+    T extends RTINumber
+    ? number
+    : //
+    T extends RTINumericLiteral<infer Numbers>
+    ? Numbers
+    : //
+    T extends RTIBool
+    ? boolean
+    : //
+    T extends RTIUnion<infer Objects>
+    ? ToType<Objects>
+    : never; */
 }

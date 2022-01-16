@@ -1,4 +1,4 @@
-import { RTIStringProps } from "../../object-types/primitive/RTIString";
+import { RTIStringProps } from "../../classes/primitive/RTIString";
 import {
   CriteriaValidation,
   IStringValidation,

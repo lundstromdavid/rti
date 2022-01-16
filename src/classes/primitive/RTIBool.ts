@@ -1,8 +1,7 @@
 import { BooleanValidationResult } from "../../validation/primitive/BooleanValidationResult";
-import { AbsRTIObject } from "../AbsRTIObject";
-import { IBooleanValidation } from "../../validation/ValidationTypes";
+import { RTIClass } from "../RTIClass";
 
-export class RTIBool extends AbsRTIObject<boolean> {
+export class RTIBool extends RTIClass<BooleanValidationResult> {
   private readonly type = "boolean";
 
   validate(value: any): BooleanValidationResult {

@@ -8,7 +8,6 @@ describe("RTI numeric literal tests", () => {
 
 		const Example = RTI.create({
 			numLiteral: numericLiteral(20, 25.3, -28.2),
-			optionalTest: optional().numericLiteral(5)
 		});
 
 		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 

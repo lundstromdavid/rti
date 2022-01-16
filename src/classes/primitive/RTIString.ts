@@ -2,8 +2,8 @@ import { RTI } from "../../RTI";
 import { MUtils } from "../../utils/MUtils";
 import { TCustomValidationCallback } from "../../validation/primitive/PrimitiveValidator";
 import { StringValidationResult } from "../../validation/primitive/StringValidationResult";
-import { ValidationHelper } from "../../validation/ValidationHelper";
-import { AbsRTIObject } from "../AbsRTIObject";
+import { ValidationHelper, ValidationTypes } from "../../validation/ValidationHelper";
+import { RTIClass } from "../RTIClass";
 
 export type RTIStringProps = {
   minLength?: number;
@@ -15,7 +15,7 @@ export type RTIStringProps = {
   customValidation?: TCustomValidationCallback<string>;
 };
 
-export class RTIString extends AbsRTIObject<string> {
+export class RTIString extends RTIClass<StringValidationResult> {
   private readonly discriminator = "RTIString";
   private readonly props: RTIStringProps = {};
 

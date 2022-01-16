@@ -1,8 +1,8 @@
 import { NumericLiteralValidationResult } from "../../validation/primitive/NumericLiteralValidationResult";
-import { AbsRTIObject } from "../AbsRTIObject";
+import { RTIClass } from "../RTIClass";
 
 
-export class RTINumericLiteral<T extends number> extends AbsRTIObject<number, true> {
+export class RTINumericLiteral<T extends number> extends RTIClass<NumericLiteralValidationResult> {
 
 	private readonly discriminator = "numericLiteral";
 	private readonly allowedValues: T[];

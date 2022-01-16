@@ -1,7 +1,7 @@
 import { StringLiteralValidationResult } from "../../validation/primitive/StringLiteralValidationResult";
-import { AbsRTIObject } from "../AbsRTIObject";
+import { RTIClass } from "../RTIClass";
 
-export class RTIStringLiteral<T extends string> extends AbsRTIObject<string, true> {
+export class RTIStringLiteral<T extends string> extends RTIClass<StringLiteralValidationResult> {
 
 	private readonly discriminator = "stringLiteral";
 	private readonly allowedValues: T[];

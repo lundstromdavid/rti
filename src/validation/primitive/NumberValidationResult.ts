@@ -1,4 +1,4 @@
-import { RTINumberRules } from "../../object-types/primitive/RTINumber";
+import { RTINumberRules } from "../../classes/primitive/RTINumber";
 import {
   CriteriaValidation,
   INumberValidation,

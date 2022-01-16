@@ -1,8 +1,8 @@
 import { MUtils } from "../../utils/MUtils";
-import { TCustomValidationCallback } from "../../validation/primitive/PrimitiveValidator";
 import { NumberValidationResult } from "../../validation/primitive/NumberValidationResult";
+import { TCustomValidationCallback } from "../../validation/primitive/PrimitiveValidator";
 import { ValidationHelper } from "../../validation/ValidationHelper";
-import { AbsRTIObject } from "../AbsRTIObject";
+import { RTIClass } from "../RTIClass";
 
 export type RTINumberRules = {
   minValue?: number;
@@ -12,7 +12,7 @@ export type RTINumberRules = {
   customValidation?: TCustomValidationCallback<number>;
 };
 
-export class RTINumber extends AbsRTIObject<number> {
+export class RTINumber extends RTIClass<NumberValidationResult> {
   private readonly discriminator = "number";
   private readonly rules: RTINumberRules = {};
 
