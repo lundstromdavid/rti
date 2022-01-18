@@ -1,13 +1,11 @@
-import {
-	CriteriaValidation, IStringLiteralValidation,
-	TTypeCheck
-} from "../ValidationTypes";
+
+import { RTIT } from "../../types/api-types";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
-export class StringLiteralValidationResult implements IStringLiteralValidation {
+export class StringLiteralValidationResult implements RTIT.IStringLiteralValidation {
   readonly passed: boolean;
-  readonly typeCheck: TTypeCheck<string>;
-  readonly valueAllowed: CriteriaValidation = CriteriaValidation.unchecked;
+  readonly typeCheck: RTIT.TypeCheck<string>;
+  readonly valueAllowed: RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
 
   readonly confirmedValue: string;
 
@@ -21,14 +19,14 @@ export class StringLiteralValidationResult implements IStringLiteralValidation {
     if (passedBaseTest) {
       this.confirmedValue = value as string;
       this.valueAllowed = this.checkValueAllowed();
-      this.passed = this.valueAllowed === CriteriaValidation.passed;
+      this.passed = this.valueAllowed === RTIT.CriteriaValidation.passed;
     } else {
       this.passed = false;
     }
   }
 
-  private checkValueAllowed(): CriteriaValidation {
-    return CriteriaValidation.fromBool(
+  private checkValueAllowed(): RTIT.CriteriaValidation {
+    return RTIT.CriteriaValidation.fromBool(
       this.allowedValues.includes(this.confirmedValue)
     );
   }

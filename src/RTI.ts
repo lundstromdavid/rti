@@ -10,7 +10,7 @@ import { RTINumericLiteral } from "./classes/primitive/RTINumericLiteral";
 import { RTIString } from "./classes/primitive/RTIString";
 import { RTIStringLiteral } from "./classes/primitive/RTIStringLiteral";
 import { RTIValidator, TRTIValidatorArgs } from "./RTIValidator";
-import { RTIType } from "./types/api-types";
+import { RTIT } from "./types/api-types";
 import assert from "./utils/Assert";
 import { MUtils } from "./utils/MUtils";
 
@@ -20,7 +20,7 @@ type AssertValidReturn<T extends ValidatedArguments> = {
 };
 type StripFirstUnderscore<key> = key extends `_${infer rest}` ? rest : key;
 
-export class RTI<T extends RTIType.Schema> {
+export class RTI<T extends RTIT.Schema> {
   constructor(private readonly schema: T) {}
 
   private static stripFirstUnderscore<T extends ValidatedArguments>(
@@ -59,7 +59,7 @@ export class RTI<T extends RTIType.Schema> {
     return Optional;
   }
 
-  static create<T extends RTIType.Schema>(obj: T) {
+  static create<T extends RTIT.Schema>(obj: T) {
     return new RTI(obj);
   }
 
@@ -91,16 +91,14 @@ class Optional {
 
 export namespace RTI {
   export class Validated<T extends RTI<any>> {
-    readonly values: Readonly<RTIType.ConvertToInterface<T>>;
+    readonly values: Readonly<RTIT.ConvertToInterface<T>>;
 
     public constructor(args: TRTIValidatorArgs) {
       this.values = RTIValidator.validate(args);
     }
   }
 
-  
-
-
+}
 
 export const string = () => RTI.string;
 export function stringLiteral<T extends string>(...args: T[]) {

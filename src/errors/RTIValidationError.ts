@@ -1,4 +1,4 @@
-import { TPrimitive } from "../types/Primitive";
+import { TPrimitive } from "../types/local-types";
 import { ValidationTypes } from "../validation/ValidationHelper";
 
 export enum EValidationError {

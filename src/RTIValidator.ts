@@ -1,17 +1,17 @@
 import { RTIValidationError } from "./errors/RTIValidationError";
 import { RTI } from "./RTI";
-import { RTISchema } from "./types/RTISchema";
+import { RTIT } from "./types/api-types";
 import { MUtils } from "./utils/MUtils";
 
 export type TRTIValidatorArgs = {
-  schema: RTISchema;
+  schema: RTIT.Schema;
   valuesToValidate: any;
 };
 
 export class RTIValidator {
   public static validate<T extends RTI<any>>(
     args: TRTIValidatorArgs
-  ): Readonly<RTI.ConvertToInterface<T>> {
+  ): Readonly<RTIT.ConvertToInterface<T>> {
     const { schema, valuesToValidate } = args;
 
     if (typeof valuesToValidate !== "object") {

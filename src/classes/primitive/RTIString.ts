@@ -1,4 +1,5 @@
 import { RTI } from "../../RTI";
+import { RTIT } from "../../types/api-types";
 import { MUtils } from "../../utils/MUtils";
 import { TCustomValidationCallback } from "../../validation/primitive/PrimitiveValidator";
 import { StringValidationResult } from "../../validation/primitive/StringValidationResult";
@@ -53,13 +54,13 @@ export class RTIString extends RTIClass<StringValidationResult> {
 
   public includesAll(
     values: string | string[],
-    mode: RTI.Case = RTI.Case.sensitive
+    mode: RTIT.Case = RTIT.Case.sensitive
   ): RTIString {
     switch (mode) {
-      case RTI.Case.sensitive:
+      case RTIT.Case.sensitive:
         this.props.includesAllCaseSensitive = MUtils.asArray(values);
         break;
-      case RTI.Case.insensitive:
+      case RTIT.Case.insensitive:
         this.props.includesAllCaseInsensitive = MUtils.asArray(values);
         break;
     }
@@ -68,13 +69,13 @@ export class RTIString extends RTIClass<StringValidationResult> {
 
   public includesSome(
     values: string | string[],
-    mode: RTI.Case = RTI.Case.sensitive
+    mode: RTIT.Case = RTIT.Case.sensitive
   ): RTIString {
     switch (mode) {
-      case RTI.Case.sensitive:
+      case RTIT.Case.sensitive:
         this.props.includesSomeCaseSensitive = MUtils.asArray(values);
         break;
-      case RTI.Case.insensitive:
+      case RTIT.Case.insensitive:
         this.props.includesSomeCaseInsensitive = MUtils.asArray(values);
         break;
     }

@@ -1,12 +1,12 @@
-import { CriteriaValidation, INumericLiteralValidation, TTypeCheck } from "../ValidationTypes";
+import { RTIT } from "../../types/api-types";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
 
-export class NumericLiteralValidationResult implements INumericLiteralValidation {
+export class NumericLiteralValidationResult implements RTIT.INumericLiteralValidation {
 
 	readonly passed: boolean;
-	readonly typeCheck: TTypeCheck<number>;
-	readonly valueAllowed:  CriteriaValidation = CriteriaValidation.unchecked;
+	readonly typeCheck: RTIT.TypeCheck<number>;
+	readonly valueAllowed:  RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
 
 	readonly confirmedValue: number;
 
@@ -18,14 +18,14 @@ export class NumericLiteralValidationResult implements INumericLiteralValidation
 		if (passedBaseTest) {
 			this.confirmedValue = value as number;
 			this.valueAllowed = this.checkValueAllowed();
-			this.passed = this.valueAllowed === CriteriaValidation.passed;
+			this.passed = this.valueAllowed === RTIT.CriteriaValidation.passed;
 		} else {
 			this.passed = false;
 		}
 
 	}
 
-	private checkValueAllowed(): CriteriaValidation {
-		return CriteriaValidation.fromBool(this.allowedValues.includes(this.confirmedValue));
+	private checkValueAllowed(): RTIT.CriteriaValidation {
+		return RTIT.CriteriaValidation.fromBool(this.allowedValues.includes(this.confirmedValue));
 	}
 } 

@@ -1,13 +1,6 @@
 import { MinHigherThanMax } from "../exceptions/MinHigherThanMax";
 import { NegativeValueException } from "../exceptions/NegativeValueException";
-import { RTIBool } from "../classes/primitive/RTIBool";
-import { RTINumber } from "../classes/primitive/RTINumber";
-import { RTINumericLiteral } from "../classes/primitive/RTINumericLiteral";
-import { RTIString } from "../classes/primitive/RTIString";
-import { RTIStringLiteral } from "../classes/primitive/RTIStringLiteral";
-import { RTIClass } from "../classes/RTIClass";
-import { RTIUnion } from "../classes/RTIUnion";
-import { TPrimitive } from "../types/Primitive";
+import { TPrimitive } from "../types/local-types";
 import assert from "../utils/Assert";
 import { notNull } from "../utils/NullCheck";
 import { BooleanValidationResult } from "./primitive/BooleanValidationResult";

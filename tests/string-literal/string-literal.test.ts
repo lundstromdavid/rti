@@ -1,4 +1,5 @@
 import {  RTI, stringLiteral } from "../../src/RTI";
+import { RTIT } from "../../src/types/api-types";
 
 
 describe("RTI string literal tests", () => {
@@ -10,7 +11,7 @@ describe("RTI string literal tests", () => {
 			stringLiteral: stringLiteral("allowed", "also allowed", "test"),
 		});
 
-		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
 
 		expect(validate({stringLiteral: "allowed"})).not.toThrow();
 		expect(validate({stringLiteral: "also allowed"})).not.toThrow();

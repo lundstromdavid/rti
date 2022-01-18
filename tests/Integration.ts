@@ -1,10 +1,11 @@
-import { RTI} from "../RTI";
+import { RTI } from "../src/RTI";
+import { RTIT } from "../src/types/api-types";
 
 
 const User = RTI.create({
 	id: RTI.string,
-	username: RTI.string.range(8, 25), 
-	password: RTI.string.range(8, 25),
+	username: RTI.string.lengthInRange(8, 25), 
+	password: RTI.string.lengthInRange(8, 25),
 	email: RTI.string,
 	age: RTI.number,
 	subscribesToNewsletter: RTI.optional.boolean,
@@ -12,7 +13,7 @@ const User = RTI.create({
 
 type TUser = typeof User;
 type ValidatedUser = RTI.Validated<TUser>;
-type IUser = RTI.ConvertToInterface<TUser>;
+type IUser = RTIT.ConvertToInterface<TUser>;
 
 const mockNetworkData: IUser = {
 	id: "this is not an id",

@@ -1,22 +1,19 @@
 import { RTIStringProps } from "../../classes/primitive/RTIString";
-import {
-  CriteriaValidation,
-  IStringValidation,
-  TTypeCheck,
-} from "../ValidationTypes";
+
 import { RTI } from "../../RTI";
+import { RTIT } from "../../types/api-types";
 import { isNull } from "../../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
-export class StringValidationResult implements IStringValidation {
+export class StringValidationResult implements RTIT.IStringValidation {
   public readonly passed: boolean;
   public readonly discriminator: "string";
-  public readonly typeCheck: TTypeCheck<string>;
-  public readonly customValidationPassed: CriteriaValidation;
-  public readonly longEnough: CriteriaValidation;
-  public readonly notTooLong: CriteriaValidation;
-  public readonly containsAllProvidedValues: CriteriaValidation;
-  public readonly containsAtLeastOneProvidedValue: CriteriaValidation;
+  public readonly typeCheck: RTIT.TypeCheck<string>;
+  public readonly customValidationPassed: RTIT.CriteriaValidation;
+  public readonly longEnough: RTIT.CriteriaValidation;
+  public readonly notTooLong: RTIT.CriteriaValidation;
+  public readonly containsAllProvidedValues: RTIT.CriteriaValidation;
+  public readonly containsAtLeastOneProvidedValue: RTIT.CriteriaValidation;
 
   private confirmedValue: string;
 
@@ -45,58 +42,58 @@ export class StringValidationResult implements IStringValidation {
       this.notTooLong,
       this.containsAllProvidedValues,
       this.containsAtLeastOneProvidedValue,
-    ].every((val) => val !== CriteriaValidation.failed);
+    ].every((val) => val !== RTIT.CriteriaValidation.failed);
   }
 
-  private checkLongEnough(): CriteriaValidation {
+  private checkLongEnough(): RTIT.CriteriaValidation {
     const { minLength } = this.args;
-    if (isNull(minLength)) return CriteriaValidation.noRestriction;
-    return CriteriaValidation.fromBool(this.confirmedValue.length >= minLength);
+    if (isNull(minLength)) return RTIT.CriteriaValidation.noRestriction;
+    return RTIT.CriteriaValidation.fromBool(this.confirmedValue.length >= minLength);
   }
-  private checkNotTooLong(): CriteriaValidation {
+  private checkNotTooLong(): RTIT.CriteriaValidation {
     const { maxLength } = this.args;
-    if (isNull(maxLength)) return CriteriaValidation.noRestriction;
-    return CriteriaValidation.fromBool(this.confirmedValue.length <= maxLength);
+    if (isNull(maxLength)) return RTIT.CriteriaValidation.noRestriction;
+    return RTIT.CriteriaValidation.fromBool(this.confirmedValue.length <= maxLength);
   }
-  private checkContainsAll(): CriteriaValidation {
+  private checkContainsAll(): RTIT.CriteriaValidation {
     const { includesAllCaseSensitive, includesAllCaseInsensitive } = this.args;
-    return CriteriaValidation.fromBool(
+    return RTIT.CriteriaValidation.fromBool(
       this.checkContains(
         includesAllCaseSensitive,
-        RTI.Case.sensitive,
+        RTIT.Case.sensitive,
         "every"
       ) &&
         this.checkContains(
           includesAllCaseInsensitive,
-          RTI.Case.insensitive,
+          RTIT.Case.insensitive,
           "every"
         )
     );
   }
 
-  private checkContainsSome(): CriteriaValidation {
+  private checkContainsSome(): RTIT.CriteriaValidation {
     const { includesSomeCaseSensitive, includesSomeCaseInsensitive } =
       this.args;
-    return CriteriaValidation.fromBool(
+    return RTIT.CriteriaValidation.fromBool(
       this.checkContains(
         includesSomeCaseSensitive,
-        RTI.Case.sensitive,
+        RTIT.Case.sensitive,
         "some"
       ) &&
         this.checkContains(
           includesSomeCaseInsensitive,
-          RTI.Case.insensitive,
+          RTIT.Case.insensitive,
           "some"
         )
     );
   }
 
-  private transform = (val: string, mode: RTI.Case) =>
-    mode === RTI.Case.sensitive ? val : val.toUpperCase();
+  private transform = (val: string, mode: RTIT.Case) =>
+    mode === RTIT.Case.sensitive ? val : val.toUpperCase();
 
   private checkContains(
     arr: string[],
-    mode: RTI.Case,
+    mode: RTIT.Case,
     functionType: "every" | "some"
   ): boolean {
     const val = this.transform(this.confirmedValue, mode);

@@ -1,4 +1,5 @@
 import { RTI } from "../../src/RTI";
+import { RTIT } from "../../src/types/api-types";
 
 describe("RTI string includes functionality", () => {
   test("includes all - case sensitive", () => {
@@ -8,7 +9,7 @@ describe("RTI string includes functionality", () => {
       testStringImplicit: RTI.string.includesAll(shouldInclude),
       testStringExplicit: RTI.string.includesAll(
         shouldInclude,
-        RTI.Case.sensitive
+        RTIT.Case.sensitive
       ),
     });
 
@@ -60,7 +61,7 @@ describe("RTI string includes functionality", () => {
     const shouldInclude = ["some", "test", "words"];
 
     const rti = RTI.create({
-      testString: RTI.string.includesAll(shouldInclude, RTI.Case.insensitive),
+      testString: RTI.string.includesAll(shouldInclude, RTIT.Case.insensitive),
     });
 
     expect(() =>

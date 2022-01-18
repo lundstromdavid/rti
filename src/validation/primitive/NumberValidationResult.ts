@@ -1,20 +1,17 @@
 import { RTINumberRules } from "../../classes/primitive/RTINumber";
-import {
-  CriteriaValidation,
-  INumberValidation,
-  TTypeCheck
-} from "../ValidationTypes";
+import { RTIT } from "../../types/api-types";
+
 import { isNull } from "../../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
-export class NumberValidationResult implements INumberValidation {
+export class NumberValidationResult implements RTIT.INumberValidation {
   public readonly passed: boolean;
   public readonly discriminator = "number";
-  public readonly typeCheck: TTypeCheck<number>;
-  public readonly passedIntegerCheck: CriteriaValidation;
-  public readonly bigEnough: CriteriaValidation;
-  public readonly notTooBig: CriteriaValidation;
-  public readonly customValidationPassed: CriteriaValidation;
+  public readonly typeCheck: RTIT.TypeCheck<number>;
+  public readonly passedIntegerCheck: RTIT.CriteriaValidation;
+  public readonly bigEnough: RTIT.CriteriaValidation;
+  public readonly notTooBig: RTIT.CriteriaValidation;
+  public readonly customValidationPassed: RTIT.CriteriaValidation;
 
   private confirmedValue: number;
 
@@ -43,22 +40,22 @@ export class NumberValidationResult implements INumberValidation {
 
   private checkPassed(): boolean {
     return [this.customValidationPassed, this.passedIntegerCheck, this.bigEnough, this.notTooBig].every(
-      (val) => val !== CriteriaValidation.failed
+      (val) => val !== RTIT.CriteriaValidation.failed
     );
   }
 
-  private checkInteger(): CriteriaValidation {
-    if (!this.rules.integer) return CriteriaValidation.noRestriction;
-    return CriteriaValidation.fromBool(Number.isInteger(this.confirmedValue));
+  private checkInteger(): RTIT.CriteriaValidation {
+    if (!this.rules.integer) return RTIT.CriteriaValidation.noRestriction;
+    return RTIT.CriteriaValidation.fromBool(Number.isInteger(this.confirmedValue));
   }
 
-  private checkBigEnough(): CriteriaValidation {
-    if (isNull(this.rules.minValue)) return CriteriaValidation.noRestriction;
-    return CriteriaValidation.fromBool(this.confirmedValue >= this.rules.minValue);
+  private checkBigEnough(): RTIT.CriteriaValidation {
+    if (isNull(this.rules.minValue)) return RTIT.CriteriaValidation.noRestriction;
+    return RTIT.CriteriaValidation.fromBool(this.confirmedValue >= this.rules.minValue);
   }
 
-  private checkNotTooBig(): CriteriaValidation {
-    if (isNull(this.rules.maxValue)) return CriteriaValidation.noRestriction;
-    return CriteriaValidation.fromBool(this.confirmedValue <= this.rules.maxValue);
+  private checkNotTooBig(): RTIT.CriteriaValidation {
+    if (isNull(this.rules.maxValue)) return RTIT.CriteriaValidation.noRestriction;
+    return RTIT.CriteriaValidation.fromBool(this.confirmedValue <= this.rules.maxValue);
   }
 }
