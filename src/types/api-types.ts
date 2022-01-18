@@ -8,7 +8,7 @@ import { RTI } from "../RTI";
 import { TPrimitive, TPrimitiveToString } from "./local-types";
 
 export namespace RTIT {
-  export type Schema = Record<string | number | symbol, RTIClass<any>>;
+  export type Schema = Record<string | number | symbol, RTIClass<any, any>>;
 
   export type ConvertToInterface<T extends RTI<any>> = T extends RTI<infer U>
     ? Omit<

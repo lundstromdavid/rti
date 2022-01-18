@@ -44,10 +44,10 @@ export class RTI<T extends RTIT.Schema> {
     return RTIString.required();
   }
   static get number() {
-    return RTIString.required();
+    return RTINumber.required();
   }
   static get boolean() {
-    return RTIString.required();
+    return RTIBool.required();
   }
   static get optional() {
     return Optional;
