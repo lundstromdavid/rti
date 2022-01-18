@@ -16,10 +16,26 @@ export type RTIStringProps = {
   customValidation?: TCustomValidationCallback<string>;
 };
 
-export class RTIString extends RTIClass<StringValidationResult> {
+export class RTIString<Optional extends boolean> extends RTIClass<StringValidationResult, Optional> {
   private readonly discriminator = "RTIString";
   private readonly props: RTIStringProps = {};
 
+
+  private constructor(private readonly optional: Optional) {
+    super();
+  }
+
+  static required() {
+    return new RTIString(false);
+  }
+
+  static optional() {
+    return new RTIString(true);
+  }
+
+  isOptional() {
+    return this.optional;
+  }
 
 
   public minLength(min: number) {
@@ -29,14 +45,14 @@ export class RTIString extends RTIClass<StringValidationResult> {
     return this;
   }
 
-  public maxLength(max: number): RTIString {
+  public maxLength(max: number) {
     this.props.maxLength = max;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public lengthInRange(min: number, max: number): RTIString {
+  public lengthInRange(min: number, max: number) {
     return this.minLength(min).maxLength(max);
   }
 
@@ -55,7 +71,7 @@ export class RTIString extends RTIClass<StringValidationResult> {
   public includesAll(
     values: string | string[],
     mode: RTIT.Case = RTIT.Case.sensitive
-  ): RTIString {
+  ) {
     switch (mode) {
       case RTIT.Case.sensitive:
         this.props.includesAllCaseSensitive = MUtils.asArray(values);
@@ -70,7 +86,7 @@ export class RTIString extends RTIClass<StringValidationResult> {
   public includesSome(
     values: string | string[],
     mode: RTIT.Case = RTIT.Case.sensitive
-  ): RTIString {
+  ) {
     switch (mode) {
       case RTIT.Case.sensitive:
         this.props.includesSomeCaseSensitive = MUtils.asArray(values);

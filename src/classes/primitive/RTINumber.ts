@@ -12,9 +12,25 @@ export type RTINumberRules = {
   customValidation?: TCustomValidationCallback<number>;
 };
 
-export class RTINumber extends RTIClass<NumberValidationResult> {
+export class RTINumber<Optional extends boolean> extends RTIClass<NumberValidationResult, Optional> {
   private readonly discriminator = "number";
   private readonly rules: RTINumberRules = {};
+
+  private constructor(private readonly optional: Optional) {
+    super();
+  }
+
+  static required() {
+    return new RTINumber(false);
+  }
+
+  static optional() {
+    return new RTINumber(true);
+  }
+
+  isOptional() {
+    return this.optional;
+  }
 
   public min(min: number) {
     this.rules.minValue = min;

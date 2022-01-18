@@ -2,18 +2,30 @@ import { NumericLiteralValidationResult } from "../../validation/primitive/Numer
 import { RTIClass } from "../RTIClass";
 
 
-export class RTINumericLiteral<T extends number> extends RTIClass<NumericLiteralValidationResult> {
+export class RTINumericLiteral<Optional extends boolean, T extends number> extends RTIClass<NumericLiteralValidationResult, Optional> {
 
 	private readonly discriminator = "numericLiteral";
 	private readonly allowedValues: T[];
 
-	constructor(...allowedValues: T[]) {
+	constructor(private readonly optional: Optional, ...allowedValues: T[]) {
 		super();
 		this.allowedValues = allowedValues;
 		
 		this.confirmOnlyNumbers();
 		this.confirmNoDuplicates();
 	}
+
+	static required<T extends number>(...allowedValues: T[]) {
+		return new RTINumericLiteral<false, T>(false, ...allowedValues);
+	  }
+	
+	  static optional<T extends number>(...allowedValues: T[]) {
+		return new RTINumericLiteral<true, T>(true, ...allowedValues);
+	  }
+	
+	  isOptional() {
+		return this.optional;
+	  }
 
 	private confirmOnlyNumbers() {
 		if (this.allowedValues.some(num => typeof num !== "number")) {

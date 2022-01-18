@@ -1,9 +1,3 @@
-import { IOptional } from "./classes/optionals/IOptional";
-import { RTIOptionalBool } from "./classes/optionals/RTIOptionalBool";
-import { RTIOptionalNumber } from "./classes/optionals/RTIOptionalNumber";
-import { RTIOptionalNumericLiteral } from "./classes/optionals/RTIOptionalNumericLiteral";
-import { RTIOptionalString } from "./classes/optionals/RTIOptionalString";
-import { RTIOptionalStringLiteral } from "./classes/optionals/RTIOptionalStringLiteral";
 import { RTIBool } from "./classes/primitive/RTIBool";
 import { RTINumber } from "./classes/primitive/RTINumber";
 import { RTINumericLiteral } from "./classes/primitive/RTINumericLiteral";
@@ -47,13 +41,13 @@ export class RTI<T extends RTIT.Schema> {
   }
 
   static get string() {
-    return new RTIString();
+    return RTIString.required();
   }
   static get number() {
-    return new RTINumber();
+    return RTIString.required();
   }
   static get boolean() {
-    return new RTIBool();
+    return RTIString.required();
   }
   static get optional() {
     return Optional;
@@ -73,19 +67,19 @@ export class RTI<T extends RTIT.Schema> {
 
 class Optional {
   static get string() {
-    return new RTIOptionalString();
+    return RTIString.optional();
   }
   static get number() {
-    return new RTIOptionalNumber();
+    return RTINumber.optional();
   }
   static get boolean() {
-    return new RTIOptionalBool();
+    return RTIBool.optional();
   }
   static stringLiteral<T extends string>(...values: T[]) {
-    return new RTIOptionalStringLiteral<T>(...values);
+    return RTIStringLiteral.optional(...values);
   }
   static numericLiteral<T extends number>(...values: T[]) {
-    return new RTIOptionalNumericLiteral<T>(...values);
+    return RTINumericLiteral.optional(...values);
   }
 }
 
@@ -102,11 +96,11 @@ export namespace RTI {
 
 export const string = () => RTI.string;
 export function stringLiteral<T extends string>(...args: T[]) {
-  return new RTIStringLiteral<T>(...args);
+  return RTIStringLiteral.required(...args);
 }
 export const number = () => RTI.number;
 export function numericLiteral<T extends number>(...args: T[]) {
-  return new RTINumericLiteral<T>(...args);
+  return RTINumericLiteral.required(...args);
 }
 
 export const boolean = () => RTI.boolean;

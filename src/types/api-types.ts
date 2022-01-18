@@ -1,4 +1,3 @@
-import { IOptional } from "../classes/optionals/IOptional";
 import { RTIBool } from "../classes/primitive/RTIBool";
 import { RTINumber } from "../classes/primitive/RTINumber";
 import { RTINumericLiteral } from "../classes/primitive/RTINumericLiteral";
@@ -22,22 +21,22 @@ export namespace RTIT {
       >
     : never;
 
-  type Required<R extends Schema, K extends keyof R> = R[K] extends IOptional
+  type Required<R extends Schema, K extends keyof R> = R[K] extends RTIClass<any, true>
     ? never
     : K;
-  type Optional<R extends Schema, K extends keyof R> = R[K] extends IOptional
+  type Optional<R extends Schema, K extends keyof R> = R[K] extends RTIClass<any, true>
     ? K
     : never;
 
-  type RTIToPrimitive<T> = T extends RTIString
+  type RTIToPrimitive<T> = T extends RTIString<any>
     ? string
-    : T extends RTIStringLiteral<infer Strings>
+    : T extends RTIStringLiteral<any, infer Strings>
     ? Strings
-    : T extends RTIBool
+    : T extends RTIBool<any>
     ? boolean
-    : T extends RTINumber
+    : T extends RTINumber<any>
     ? number
-    : T extends RTINumericLiteral<infer Numbers>
+    : T extends RTINumericLiteral<any, infer Numbers>
     ? Numbers
     : never;
 
