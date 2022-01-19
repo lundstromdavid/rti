@@ -1,5 +1,6 @@
 
 import { RTIT } from "../../types/api-types";
+import assert from "../../utils/Assert";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
 export class StringLiteralValidationResult implements RTIT.IStringLiteralValidation {
@@ -7,7 +8,7 @@ export class StringLiteralValidationResult implements RTIT.IStringLiteralValidat
   readonly typeCheck: RTIT.TypeCheck<string>;
   readonly valueAllowed: RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
 
-  readonly confirmedValue: string;
+  readonly confirmedValue?: string;
 
   constructor(value: any, readonly allowedValues: string[]) {
     const { passedBaseTest, typeCheck } = new PrimitiveValidator<string>(
@@ -27,7 +28,7 @@ export class StringLiteralValidationResult implements RTIT.IStringLiteralValidat
 
   private checkValueAllowed(): RTIT.CriteriaValidation {
     return RTIT.CriteriaValidation.fromBool(
-      this.allowedValues.includes(this.confirmedValue)
+      this.allowedValues.includes(assert(this.confirmedValue))
     );
   }
 }

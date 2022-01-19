@@ -11,14 +11,14 @@ import { StringValidationResult } from "./primitive/StringValidationResult";
 import { UnionValidationResult } from "./UnionValidationResult";
 
 export class ValidationHelper {
-  static assertMinHigherThanMax(min: number, max: number) {
+  static assertMinHigherThanMax(min?: number, max?: number) {
     const minNotNull = notNull(min);
     const maxNotNull = notNull(max);
     if (minNotNull && maxNotNull) {
       assert(min < max, new MinHigherThanMax());
     }
   }
-  static assertNonNegative(...numbers: number[]) {
+  static assertNonNegative(...numbers: (number | undefined | null)[]) {
     numbers.forEach((number) => {
       if (notNull(number)) assert(number >= 0, new NegativeValueException());
     });

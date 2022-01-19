@@ -21,8 +21,11 @@ export class RTIValidationError<T extends TPrimitive, Literal extends boolean> i
   readonly results?: ValidationTypes.Result<T, Literal>;
 
   private constructor(args: IErrorArgs<T, Literal>) {
+    this.error = args.error;
+    this.valuesPassedIn = args.valuesPassedIn;
+    this.failedOnProperty = args.failedOnProperty;
+    this.results = args.results;
     Object.setPrototypeOf(this, RTIValidationError.prototype);
-    Object.assign(this, args);
   }
 
   public static passedInValuesNotAnObject(valuesPassedIn: any) {

@@ -54,11 +54,11 @@ describe("RTI numeric literal tests", () => {
 		})).toThrow();
 
 		expect(() => RTI.create({
-			numLiteral: numericLiteral(10, undefined)
+			numLiteral: numericLiteral(10, undefined as any)
 		})).toThrow();
 
 		expect(() => RTI.create({
-			numLiteral: numericLiteral(10, null)
+			numLiteral: numericLiteral(10, null as any)
 		})).toThrow();
 
 	});

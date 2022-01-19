@@ -54,11 +54,11 @@ describe("RTI string literal tests", () => {
 		})).toThrow();
 
 		expect(() => RTI.create({
-			stringLiteral: stringLiteral("", undefined)
+			stringLiteral: stringLiteral("", undefined as any)
 		})).toThrow();
 
 		expect(() => RTI.create({
-			stringLiteral: stringLiteral("", null)
+			stringLiteral: stringLiteral("", null as any)
 		})).toThrow();
 
 	});

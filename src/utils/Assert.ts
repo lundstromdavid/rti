@@ -22,6 +22,16 @@ function assert<T>(obj: T, message?: string | Error): Truthy<T> {
 	return obj as Truthy<T>;
 }
 
+export function assertNotNull<T>(obj: T, message?: string | Error): Truthy<T> {
+
+	if (isNull(obj)) {
+		if (message instanceof Error) throw message;
+		throw new AssertionError(message);
+	}
+
+	return obj as Truthy<T>;
+}
+
 class AssertionError extends Error {
 	constructor(message?: string) {
 		const msg = message || "Assertion failed.";

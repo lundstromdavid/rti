@@ -1,19 +1,20 @@
 import { RTINumberCriteria } from "../../classes/primitive/RTINumber";
 import { RTIT } from "../../types/api-types";
+import assert, { assertNotNull } from "../../utils/Assert";
 
-import { isNull } from "../../utils/NullCheck";
+import { isNull, notNull } from "../../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
 export class NumberValidationResult implements RTIT.INumberValidation {
   public readonly passed: boolean;
   public readonly discriminator = "number";
   public readonly typeCheck: RTIT.TypeCheck<number>;
-  public readonly passedIntegerCheck: RTIT.CriteriaValidation;
-  public readonly bigEnough: RTIT.CriteriaValidation;
-  public readonly notTooBig: RTIT.CriteriaValidation;
-  public readonly customValidationPassed: RTIT.CriteriaValidation;
+  public readonly passedIntegerCheck: RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
+  public readonly bigEnough: RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
+  public readonly notTooBig: RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
+  public readonly customValidationPassed: RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
 
-  private confirmedValue: number;
+  private confirmedValue?: number;
 
   public constructor(value: any, private readonly rules: RTINumberCriteria) {
     const {
@@ -50,12 +51,14 @@ export class NumberValidationResult implements RTIT.INumberValidation {
   }
 
   private checkBigEnough(): RTIT.CriteriaValidation {
+    const value = assertNotNull(this.confirmedValue);
     if (isNull(this.rules.minValue)) return RTIT.CriteriaValidation.noRestriction;
-    return RTIT.CriteriaValidation.fromBool(this.confirmedValue >= this.rules.minValue);
+    return RTIT.CriteriaValidation.fromBool(value >= this.rules.minValue);
   }
 
   private checkNotTooBig(): RTIT.CriteriaValidation {
+    const value = assertNotNull(this.confirmedValue);
     if (isNull(this.rules.maxValue)) return RTIT.CriteriaValidation.noRestriction;
-    return RTIT.CriteriaValidation.fromBool(this.confirmedValue <= this.rules.maxValue);
+    return RTIT.CriteriaValidation.fromBool(value <= this.rules.maxValue);
   }
 }

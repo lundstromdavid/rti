@@ -2,20 +2,25 @@ import { RTIStringCriteria } from "../../classes/primitive/RTIString";
 
 import { RTI } from "../../RTI";
 import { RTIT } from "../../types/api-types";
+import assert from "../../utils/Assert";
 import { isNull } from "../../utils/NullCheck";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
 export class StringValidationResult implements RTIT.IStringValidation {
   public readonly passed: boolean;
-  public readonly discriminator: "string";
+
   public readonly typeCheck: RTIT.TypeCheck<string>;
   public readonly customValidationPassed: RTIT.CriteriaValidation;
-  public readonly longEnough: RTIT.CriteriaValidation;
-  public readonly notTooLong: RTIT.CriteriaValidation;
-  public readonly containsAllProvidedValues: RTIT.CriteriaValidation;
-  public readonly containsAtLeastOneProvidedValue: RTIT.CriteriaValidation;
+  public readonly longEnough: RTIT.CriteriaValidation =
+    RTIT.CriteriaValidation.unchecked;
+  public readonly notTooLong: RTIT.CriteriaValidation =
+    RTIT.CriteriaValidation.unchecked;
+  public readonly containsAllProvidedValues: RTIT.CriteriaValidation =
+    RTIT.CriteriaValidation.unchecked;
+  public readonly containsAtLeastOneProvidedValue: RTIT.CriteriaValidation =
+    RTIT.CriteriaValidation.unchecked;
 
-  private confirmedValue: string;
+  private confirmedValue?: string;
 
   public constructor(value: any, private readonly args: RTIStringCriteria) {
     const { passedBaseTest, customValidationPassed, typeCheck } =
@@ -48,12 +53,16 @@ export class StringValidationResult implements RTIT.IStringValidation {
   private checkLongEnough(): RTIT.CriteriaValidation {
     const { minLength } = this.args;
     if (isNull(minLength)) return RTIT.CriteriaValidation.noRestriction;
-    return RTIT.CriteriaValidation.fromBool(this.confirmedValue.length >= minLength);
+    return RTIT.CriteriaValidation.fromBool(
+      assert(this.confirmedValue).length >= minLength
+    );
   }
   private checkNotTooLong(): RTIT.CriteriaValidation {
     const { maxLength } = this.args;
     if (isNull(maxLength)) return RTIT.CriteriaValidation.noRestriction;
-    return RTIT.CriteriaValidation.fromBool(this.confirmedValue.length <= maxLength);
+    return RTIT.CriteriaValidation.fromBool(
+      assert(this.confirmedValue).length <= maxLength
+    );
   }
   private checkContainsAll(): RTIT.CriteriaValidation {
     const { includesAllCaseSensitive, includesAllCaseInsensitive } = this.args;
@@ -92,11 +101,13 @@ export class StringValidationResult implements RTIT.IStringValidation {
     mode === RTIT.Case.sensitive ? val : val.toUpperCase();
 
   private checkContains(
-    arr: string[],
+    arr: string[] | undefined,
     mode: RTIT.Case,
     functionType: "every" | "some"
   ): boolean {
-    const val = this.transform(this.confirmedValue, mode);
+    if (isNull(arr)) return true;
+
+    const val = this.transform(assert(this.confirmedValue), mode);
     return (
       isNull(arr) ||
       arr[functionType]((el) => val.includes(this.transform(el, mode)))

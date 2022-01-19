@@ -8,6 +8,6 @@ export function notNull<T>(obj: T): obj is TNotNull<T> {
   return !!obj;
 }
 
-export function isNull<T>(obj: T): obj is null | undefined {
+export function isNull<T>(obj: T | null | undefined): obj is null | undefined {
   return !notNull(obj);
 }

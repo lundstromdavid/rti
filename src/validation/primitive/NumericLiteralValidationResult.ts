@@ -1,4 +1,5 @@
 import { RTIT } from "../../types/api-types";
+import assert from "../../utils/Assert";
 import { PrimitiveValidator } from "./PrimitiveValidator";
 
 
@@ -8,7 +9,7 @@ export class NumericLiteralValidationResult implements RTIT.INumericLiteralValid
 	readonly typeCheck: RTIT.TypeCheck<number>;
 	readonly valueAllowed:  RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
 
-	readonly confirmedValue: number;
+	readonly confirmedValue?: number;
 
 	constructor(value: any, readonly allowedValues: number[]) {
 
@@ -26,6 +27,6 @@ export class NumericLiteralValidationResult implements RTIT.INumericLiteralValid
 	}
 
 	private checkValueAllowed(): RTIT.CriteriaValidation {
-		return RTIT.CriteriaValidation.fromBool(this.allowedValues.includes(this.confirmedValue));
+		return RTIT.CriteriaValidation.fromBool(this.allowedValues.includes(assert(this.confirmedValue)));
 	}
 } 
