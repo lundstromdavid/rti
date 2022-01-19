@@ -1,7 +1,8 @@
+import { IStringBuilder } from "./classes/builders/IStringBuilder";
 import { RTIBoolBuilder } from "./classes/builders/RTIBoolBuilder";
 import { RTINumberBuilder } from "./classes/builders/RTINumberBuilder";
 import { RTINumericLiteralBuilder } from "./classes/builders/RTINumericLiteralBuilder";
-import { RTIStringBuilder, TStringBuilder } from "./classes/builders/RTIStringBuilder";
+import { RTIStringBuilder} from "./classes/builders/RTIStringBuilder";
 import { RTIStringLiteralBuilder } from "./classes/builders/RTIStringLiteralBuilder";
 import { RTIUnionBuilder } from "./classes/builders/RTIUnionBuilder";
 import { RTIClass } from "./classes/RTIClass";
@@ -83,7 +84,7 @@ export namespace RTI {
     }
   }
 
-  export function string(): TStringBuilder<false> {
+  export function string(): IStringBuilder<false> {
     return RTIStringBuilder.required();
   }
 
@@ -110,7 +111,7 @@ export namespace RTI {
   }
 
   export const optional = {
-    string: function (): TStringBuilder<true> {
+    string: function (): IStringBuilder<true> {
       return RTIStringBuilder.optional();
     },
 

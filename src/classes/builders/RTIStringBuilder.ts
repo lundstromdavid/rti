@@ -1,45 +1,10 @@
-import { RTIT } from "../../types/api-types";
 import { MUtils } from "../../utils/MUtils";
 import { ValidationHelper } from "../../validation/ValidationHelper";
 import { RTIString, RTIStringCriteria } from "../primitive/RTIString";
+import { IStringBuilder } from "./IStringBuilder";
 import { RTIBuilder } from "./RTIBuilder";
 
-type Length = "maxLength" | "minLength" | "lengthInRange" | "exactLength";
 
-export type TStringBuilder<
-  Optional extends boolean,
-  Used extends keyof _TStringBuilder<any, any> | "" = ""
-> = {
-  lock(): RTIString<Optional>;
-} & Omit<_TStringBuilder<Optional, Used>, Used>;
-
-type _TStringBuilder<
-  Optional extends boolean,
-  Used extends keyof _TStringBuilder<any, any> | "" = ""
-> = {
-  minLength(min: number): TStringBuilder<Optional, Used | Length>;
-  maxLength(max: number): TStringBuilder<Optional, Used | Length>;
-  lengthInRange(
-    min: number,
-    max: number
-  ): TStringBuilder<Optional, Used | Length>;
-  exactLength(length: number): TStringBuilder<Optional, Used | Length>;
-  includesAll(
-    values: string | string[]
-  ): TStringBuilder<Optional, Used | "includesAll">;
-  includesAllCaseInsensitive(
-    values: string | string[]
-  ): TStringBuilder<Optional, Used | "includesAllCaseInsensitive">;
-  includesSome(
-    values: string | string[]
-  ): TStringBuilder<Optional, Used | "includesSome">;
-  includesSomeCaseInsensitive(
-    values: string | string[]
-  ): TStringBuilder<Optional, Used | "includesAllCaseInsensitive">;
-};
-
-interface IStringBuilder<Optional extends boolean>
-  extends TStringBuilder<Optional> {}
 
 export class RTIStringBuilder<Optional extends boolean>
   extends RTIBuilder<Optional, RTIString<Optional>>
@@ -59,28 +24,28 @@ export class RTIStringBuilder<Optional extends boolean>
     return new RTIStringBuilder(true);
   }
 
-  public minLength(min: number): TStringBuilder<Optional> {
+  public minLength(min: number): IStringBuilder<Optional> {
     this.criteria.minLength = min;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public maxLength(max: number): TStringBuilder<Optional> {
+  public maxLength(max: number): IStringBuilder<Optional> {
     this.criteria.maxLength = max;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public lengthInRange(min: number, max: number): TStringBuilder<Optional> {
+  public lengthInRange(min: number, max: number): IStringBuilder<Optional> {
     this.criteria.minLength = min;
     this.criteria.maxLength = max;
     this.assertValidMinAndMaxLength();
     return this;
   }
 
-  public exactLength(length: number): TStringBuilder<Optional> {
+  public exactLength(length: number): IStringBuilder<Optional> {
     this.criteria.minLength = length;
     this.criteria.maxLength = length;
     return this;
@@ -92,26 +57,26 @@ export class RTIStringBuilder<Optional extends boolean>
     ValidationHelper.assertMinHigherThanMax(minLength, maxLength);
   }
 
-  public includesAll(values: string | string[]): TStringBuilder<Optional> {
+  public includesAll(values: string | string[]): IStringBuilder<Optional> {
     this.criteria.includesAllCaseSensitive = MUtils.asArray(values);
     return this;
   }
 
   public includesAllCaseInsensitive(
     values: string | string[]
-  ): TStringBuilder<Optional> {
+  ): IStringBuilder<Optional> {
     this.criteria.includesAllCaseInsensitive = MUtils.asArray(values);
     return this;
   }
 
-  public includesSome(values: string | string[]): TStringBuilder<Optional> {
+  public includesSome(values: string | string[]): IStringBuilder<Optional> {
     this.criteria.includesSomeCaseSensitive = MUtils.asArray(values);
     return this;
   }
 
   public includesSomeCaseInsensitive(
     values: string | string[]
-  ): TStringBuilder<Optional> {
+  ): IStringBuilder<Optional> {
     this.criteria.includesSomeCaseInsensitive = MUtils.asArray(values);
     return this;
   }
