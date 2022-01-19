@@ -7,7 +7,7 @@ const User = RTI.create({
 	username: string().maxLength(5), 
 	password: string().maxLength(15),
 	email: string(),
-	age: number(),
+	age: number().min(15).divisibleBy(5).integer(),
 	subscribesToNewsletter: optional.boolean(),
 });
 

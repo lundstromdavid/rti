@@ -11,7 +11,7 @@ type TStringBuilder<
 
 type _TStringBuilder<
   Optional extends boolean,
-  Used extends keyof _TStringBuilder<any, any> | "" = ""
+  Used extends keyof _TStringBuilder<any, any> | ""
 > = {
   minLength(min: number): TStringBuilder<Optional, Used | Length>;
   maxLength(max: number): TStringBuilder<Optional, Used | Length>;

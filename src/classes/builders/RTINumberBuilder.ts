@@ -1,15 +1,16 @@
 import { MUtils } from "../../utils/MUtils";
 import { ValidationHelper } from "../../validation/ValidationHelper";
 import { RTINumber, RTINumberCriteria } from "../primitive/RTINumber";
+import { INumberBuilder } from "./INumberBuilder";
 import { RTIBuilder } from "./RTIBuilder";
 
 
 
-export class RTINumberBuilder<Optional extends boolean> extends RTIBuilder<Optional, RTINumber<Optional>> {
+export class RTINumberBuilder<Opt extends boolean> extends RTIBuilder<Opt, RTINumber<Opt>> implements INumberBuilder<Opt>{
 
   private readonly criteria: RTINumberCriteria = {};
 
-  private constructor(private readonly optional: Optional) {
+  private constructor(private readonly optional: Opt) {
     super();
   }
 
@@ -57,11 +58,11 @@ export class RTINumberBuilder<Optional extends boolean> extends RTIBuilder<Optio
   }
 
   // Ugly casts :'(
-  lock(): RTINumber<Optional> {
+  lock(): RTINumber<Opt> {
     if (this.optional) {
-      return RTINumber.optional(this.criteria) as RTINumber<Optional>;
+      return RTINumber.optional(this.criteria) as RTINumber<Opt>;
     } else {
-      return RTINumber.required(this.criteria) as RTINumber<Optional>;
+      return RTINumber.required(this.criteria) as RTINumber<Opt>;
     }
   }
 }

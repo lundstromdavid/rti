@@ -1,3 +1,4 @@
+import { INumberBuilder } from "./classes/builders/INumberBuilder";
 import { IStringBuilder } from "./classes/builders/IStringBuilder";
 import { RTIBoolBuilder } from "./classes/builders/RTIBoolBuilder";
 import { RTINumberBuilder } from "./classes/builders/RTINumberBuilder";
@@ -92,7 +93,7 @@ export namespace RTI {
     return RTIStringLiteralBuilder.required(...args);
   }
 
-  export function number() {
+  export function number(): INumberBuilder<false> {
     return RTINumberBuilder.required();
   }
 
@@ -119,7 +120,7 @@ export namespace RTI {
       return RTIStringLiteralBuilder.optional(...values);
     },
 
-    number: function () {
+    number: function (): INumberBuilder<true> {
       return RTINumberBuilder.optional();
     },
 
