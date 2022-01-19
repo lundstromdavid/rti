@@ -1,7 +1,7 @@
 import { RTIBoolBuilder } from "./classes/builders/RTIBoolBuilder";
 import { RTINumberBuilder } from "./classes/builders/RTINumberBuilder";
 import { RTINumericLiteralBuilder } from "./classes/builders/RTINumericLiteralBuilder";
-import { RTIStringBuilder } from "./classes/builders/RTIStringBuilder";
+import { RTIStringBuilder, TStringBuilder } from "./classes/builders/RTIStringBuilder";
 import { RTIStringLiteralBuilder } from "./classes/builders/RTIStringLiteralBuilder";
 import { RTIUnionBuilder } from "./classes/builders/RTIUnionBuilder";
 import { RTIClass } from "./classes/RTIClass";
@@ -18,15 +18,14 @@ type AssertValidReturn<T extends ValidatedArguments> = {
 type StripFirstUnderscore<key> = key extends `_${infer rest}` ? rest : key;
 
 export class RTI<T extends RTIT.SchemaArg> {
-
   private readonly schema: RTIMap.SchemaArgToSchema<T>;
-  
+
   constructor(schemaArg: T) {
     this.schema = this.convertToSchema(schemaArg);
   }
 
   private convertToSchema(arg: T): RTIMap.SchemaArgToSchema<T> {
-    const schema: Partial<RTIMap.SchemaArgToSchema<T>> =  {};
+    const schema: Partial<RTIMap.SchemaArgToSchema<T>> = {};
     MUtils.entries(arg).forEach(([_key, value]) => {
       //@ts-ignore
       const key: keyof RTIMap.SchemaArgToSchema<T> = _key;
@@ -36,7 +35,7 @@ export class RTI<T extends RTIT.SchemaArg> {
       } else {
         schema[key] = value.lock();
       }
-    })
+    });
     return schema as RTIMap.SchemaArgToSchema<T>;
   }
 
@@ -84,28 +83,58 @@ export namespace RTI {
     }
   }
 
-  export const string = () => RTIStringBuilder.required();
-  export const stringLiteral = <T extends string>(...args: T[]) =>
-    RTIStringLiteralBuilder.required(...args);
-  export const number = () => RTINumberBuilder.required();
-  export const numericLiteral = <T extends number>(...args: T[]) =>
-    RTINumericLiteralBuilder.required(...args);
-  export const boolean = () => RTIBoolBuilder.required();
-  export const union = <T extends AllowedInUnion[]>(
+  export function string(): TStringBuilder<false> {
+    return RTIStringBuilder.required();
+  }
+
+  export function stringLiteral<T extends string>(...args: T[]) {
+    return RTIStringLiteralBuilder.required(...args);
+  }
+
+  export function number() {
+    return RTINumberBuilder.required();
+  }
+
+  export function numericLiteral<T extends number>(...args: T[]) {
+    return RTINumericLiteralBuilder.required(...args);
+  }
+
+  export function boolean() {
+    RTIBoolBuilder.required();
+  }
+
+  export function union<T extends AllowedInUnion[]>(
     ...args: T
-  ): RTIUnionBuilder<false, T[number]> => RTIUnionBuilder.required(...args);
+  ): RTIUnionBuilder<false, T[number]> {
+    return RTIUnionBuilder.required(...args);
+  }
 
   export const optional = {
-    string: () => RTIStringBuilder.optional(),
-    stringLiteral: <T extends string>(...values: T[]) =>
-      RTIStringLiteralBuilder.optional(...values),
-    number: () => RTINumberBuilder.optional(),
-    numericLiteral: <T extends number>(...values: T[]) =>
-      RTINumericLiteralBuilder.optional(...values),
-    boolean: () => RTIBoolBuilder.optional(),
-    union: <T extends AllowedInUnion[]>(
+    string: function (): TStringBuilder<true> {
+      return RTIStringBuilder.optional();
+    },
+
+    stringLiteral: function <T extends string>(...values: T[]) {
+      return RTIStringLiteralBuilder.optional(...values);
+    },
+
+    number: function () {
+      return RTINumberBuilder.optional();
+    },
+
+    numericLiteral: function <T extends number>(...values: T[]) {
+      return RTINumericLiteralBuilder.optional(...values);
+    },
+
+    boolean: function () {
+      return RTIBoolBuilder.optional();
+    },
+
+    union: function <T extends AllowedInUnion[]>(
       ...args: T
-    ): RTIUnionBuilder<true, T[number]> => RTIUnionBuilder.optional(...args),
+    ): RTIUnionBuilder<true, T[number]> {
+      return RTIUnionBuilder.optional(...args);
+    },
   };
 }
 

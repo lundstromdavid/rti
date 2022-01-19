@@ -4,8 +4,8 @@ import { RTIT } from "../src/types/api-types";
 
 const User = RTI.create({
 	id: string(),
-	username: string().lengthInRange(8, 25), 
-	password: string().lengthInRange(8, 25),
+	username: string().maxLength(5), 
+	password: string().maxLength(15),
 	email: string(),
 	age: number(),
 	subscribesToNewsletter: optional.boolean(),

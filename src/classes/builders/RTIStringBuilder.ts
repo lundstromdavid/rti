@@ -4,8 +4,37 @@ import { ValidationHelper } from "../../validation/ValidationHelper";
 import { RTIString, RTIStringCriteria } from "../primitive/RTIString";
 import { RTIBuilder } from "./RTIBuilder";
 
-export class RTIStringBuilder<Optional extends boolean> extends RTIBuilder<Optional, RTIString<Optional>> {
-  
+type Length = "maxLength" | "minLength" | "lengthInRange" | "exactLength";
+
+export type TStringBuilder<
+  Optional extends boolean,
+  Used extends keyof _TStringBuilder<any, any> | "" = ""
+> = {
+  lock(): RTIString<Optional>;
+} & Omit<_TStringBuilder<Optional, Used>, Used>;
+
+type _TStringBuilder<
+  Optional extends boolean,
+  Used extends keyof _TStringBuilder<any, any> | "" = ""
+> = {
+  minLength(min: number): TStringBuilder<Optional, Used | Length>;
+  maxLength(max: number): TStringBuilder<Optional, Used | Length>;
+  lengthInRange(
+    min: number,
+    max: number
+  ): TStringBuilder<Optional, Used | Length>;
+  exactLength(length: number): TStringBuilder<Optional, Used | Length>;
+  includesAll(values: string | string[]): TStringBuilder<Optional, Used>;
+  includesSome(values: string | string[]): TStringBuilder<Optional, Used>;
+};
+
+interface IStringBuilder<Optional extends boolean>
+  extends TStringBuilder<Optional> {}
+
+export class RTIStringBuilder<Optional extends boolean>
+  extends RTIBuilder<Optional, RTIString<Optional>>
+  implements IStringBuilder<Optional>
+{
   private readonly criteria: RTIStringCriteria = {};
 
   private constructor(private readonly optional: Optional) {
@@ -20,40 +49,43 @@ export class RTIStringBuilder<Optional extends boolean> extends RTIBuilder<Optio
     return new RTIStringBuilder(true);
   }
 
-  public minLength(min: number) {
+  public minLength(min: number): TStringBuilder<Optional> {
     this.criteria.minLength = min;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public maxLength(max: number) {
+  public maxLength(max: number): TStringBuilder<Optional> {
     this.criteria.maxLength = max;
     this.assertValidMinAndMaxLength();
 
     return this;
   }
 
-  public lengthInRange(min: number, max: number) {
-    return this.minLength(min).maxLength(max);
+  public lengthInRange(min: number, max: number): TStringBuilder<Optional> {
+    this.criteria.minLength = min;
+    this.criteria.maxLength = max;
+    this.assertValidMinAndMaxLength();
+    return this;
   }
 
-  public exactLength(length: number) {
-    return this.minLength(length).maxLength(length);
+  public exactLength(length: number): TStringBuilder<Optional> {
+    this.criteria.minLength = length;
+    this.criteria.maxLength = length;
+    return this;
   }
-
 
   private assertValidMinAndMaxLength() {
-    const {minLength, maxLength} = this.criteria;
+    const { minLength, maxLength } = this.criteria;
     ValidationHelper.assertNonNegative(minLength, maxLength);
     ValidationHelper.assertMinHigherThanMax(minLength, maxLength);
-    
   }
 
   public includesAll(
     values: string | string[],
     mode: RTIT.Case = RTIT.Case.sensitive
-  ) {
+  ): TStringBuilder<Optional> {
     switch (mode) {
       case RTIT.Case.sensitive:
         this.criteria.includesAllCaseSensitive = MUtils.asArray(values);
@@ -68,7 +100,7 @@ export class RTIStringBuilder<Optional extends boolean> extends RTIBuilder<Optio
   public includesSome(
     values: string | string[],
     mode: RTIT.Case = RTIT.Case.sensitive
-  ) {
+  ): TStringBuilder<Optional> {
     switch (mode) {
       case RTIT.Case.sensitive:
         this.criteria.includesSomeCaseSensitive = MUtils.asArray(values);
@@ -80,7 +112,6 @@ export class RTIStringBuilder<Optional extends boolean> extends RTIBuilder<Optio
     return this;
   }
 
- 
   // Ugly casts ;'(
   lock(): RTIString<Optional> {
     if (this.optional) {
