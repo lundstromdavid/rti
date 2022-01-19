@@ -3,6 +3,8 @@ import { RTINumber } from "./classes/primitive/RTINumber";
 import { RTINumericLiteral } from "./classes/primitive/RTINumericLiteral";
 import { RTIString } from "./classes/primitive/RTIString";
 import { RTIStringLiteral } from "./classes/primitive/RTIStringLiteral";
+import { RTIClass } from "./classes/RTIClass";
+import { AllowedInUnion, RTIUnion } from "./classes/RTIUnion";
 import { RTIValidator, TRTIValidatorArgs } from "./RTIValidator";
 import { RTIT } from "./types/api-types";
 import assert from "./utils/Assert";
@@ -40,19 +42,6 @@ export class RTI<T extends RTIT.Schema> {
     return returnVal as AssertValidReturn<Args>;
   }
 
-  static get string() {
-    return RTIString.required();
-  }
-  static get number() {
-    return RTINumber.required();
-  }
-  static get boolean() {
-    return RTIBool.required();
-  }
-  static get optional() {
-    return Optional;
-  }
-
   static create<T extends RTIT.Schema>(obj: T) {
     return new RTI(obj);
   }
@@ -65,24 +54,6 @@ export class RTI<T extends RTIT.Schema> {
   }
 }
 
-class Optional {
-  static get string() {
-    return RTIString.optional();
-  }
-  static get number() {
-    return RTINumber.optional();
-  }
-  static get boolean() {
-    return RTIBool.optional();
-  }
-  static stringLiteral<T extends string>(...values: T[]) {
-    return RTIStringLiteral.optional(...values);
-  }
-  static numericLiteral<T extends number>(...values: T[]) {
-    return RTINumericLiteral.optional(...values);
-  }
-}
-
 export namespace RTI {
   export class Validated<T extends RTI<any>> {
     readonly values: Readonly<RTIT.ConvertToInterface<T>>;
@@ -92,16 +63,33 @@ export namespace RTI {
     }
   }
 
+  export const string = () => RTIString.required();
+  export const stringLiteral = <T extends string>(...args: T[]) =>
+    RTIStringLiteral.required(...args);
+  export const number = () => RTINumber.required();
+  export const numericLiteral = <T extends number>(...args: T[]) =>
+    RTINumericLiteral.required(...args);
+  export const boolean = () => RTIBool.required();
+  export const union = <T extends AllowedInUnion[]>(...args: T): RTIUnion<false, T[number]> =>
+    RTIUnion.required(...args);
+  
+  export const optional = {
+    string: () => RTIString.optional(),
+    stringLiteral: <T extends string>(...values: T[]) =>
+      RTIStringLiteral.optional(...values),
+    number: () => RTINumber.optional(),
+    numericLiteral: <T extends number>(...values: T[]) =>
+      RTINumericLiteral.optional(...values),
+    boolean: () => RTIBool.optional(),
+    union: <T extends AllowedInUnion[]>(...args: T): RTIUnion<true, T[number]> => RTIUnion.optional(...args),
+  };
 }
 
-export const string = () => RTI.string;
-export function stringLiteral<T extends string>(...args: T[]) {
-  return RTIStringLiteral.required(...args);
-}
-export const number = () => RTI.number;
-export function numericLiteral<T extends number>(...args: T[]) {
-  return RTINumericLiteral.required(...args);
-}
+export const string = RTI.string;
+export const stringLiteral = RTI.stringLiteral;
+export const number = RTI.number;
+export const numericLiteral = RTI.numericLiteral;
+export const boolean = RTI.boolean;
+export const union = RTI.union;
 
-export const boolean = () => RTI.boolean;
-export const optional = () => RTI.optional;
+export const optional = RTI.optional;

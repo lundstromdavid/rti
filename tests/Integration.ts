@@ -1,14 +1,14 @@
-import { RTI } from "../src/RTI";
+import { number, optional, RTI, string } from "../src/RTI";
 import { RTIT } from "../src/types/api-types";
 
 
 const User = RTI.create({
-	id: RTI.string,
-	username: RTI.string.lengthInRange(8, 25), 
-	password: RTI.string.lengthInRange(8, 25),
-	email: RTI.string,
-	age: RTI.number,
-	subscribesToNewsletter: RTI.optional.boolean,
+	id: string(),
+	username: string().lengthInRange(8, 25), 
+	password: string().lengthInRange(8, 25),
+	email: string(),
+	age: number(),
+	subscribesToNewsletter: optional.boolean(),
 });
 
 type TUser = typeof User;

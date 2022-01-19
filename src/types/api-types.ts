@@ -4,6 +4,7 @@ import { RTINumericLiteral } from "../classes/primitive/RTINumericLiteral";
 import { RTIString } from "../classes/primitive/RTIString";
 import { RTIStringLiteral } from "../classes/primitive/RTIStringLiteral";
 import { RTIClass } from "../classes/RTIClass";
+import { RTIUnion } from "../classes/RTIUnion";
 import { RTI } from "../RTI";
 import { TPrimitive, TPrimitiveToString } from "./local-types";
 
@@ -21,10 +22,16 @@ export namespace RTIT {
       >
     : never;
 
-  type Required<R extends Schema, K extends keyof R> = R[K] extends RTIClass<any, true>
+  type Required<R extends Schema, K extends keyof R> = R[K] extends RTIClass<
+    any,
+    true
+  >
     ? never
     : K;
-  type Optional<R extends Schema, K extends keyof R> = R[K] extends RTIClass<any, true>
+  type Optional<R extends Schema, K extends keyof R> = R[K] extends RTIClass<
+    any,
+    true
+  >
     ? K
     : never;
 
@@ -38,6 +45,8 @@ export namespace RTIT {
     ? number
     : T extends RTINumericLiteral<any, infer Numbers>
     ? Numbers
+    : T extends RTIUnion<any, infer Objects>
+    ? RTIToPrimitive<Objects>
     : never;
 
   // Not a type, clearly

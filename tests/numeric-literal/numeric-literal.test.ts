@@ -1,4 +1,4 @@
-import { numericLiteral, optional, RTI } from "../../src/RTI";
+import { numericLiteral, RTI } from "../../src/RTI";
 import { RTIT } from "../../src/types/api-types";
 
 
