@@ -11,7 +11,7 @@ describe("RTI numeric literal tests", () => {
 			numLiteral: numericLiteral(20, 25.3, -28.2),
 		});
 
-		const validate = (rti: RTIT.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.Interface<typeof Example>) => () => Example.validate(rti); 
 
 		expect(validate({numLiteral: 20})).not.toThrow();
 		expect(validate({numLiteral: 25.3})).not.toThrow();

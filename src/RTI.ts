@@ -1,10 +1,11 @@
-import { RTIBool } from "./classes/primitive/RTIBool";
-import { RTINumber } from "./classes/primitive/RTINumber";
-import { RTINumericLiteral } from "./classes/primitive/RTINumericLiteral";
-import { RTIString } from "./classes/primitive/RTIString";
-import { RTIStringLiteral } from "./classes/primitive/RTIStringLiteral";
+import { RTIBoolBuilder } from "./classes/builders/RTIBoolBuilder";
+import { RTINumberBuilder } from "./classes/builders/RTINumberBuilder";
+import { RTINumericLiteralBuilder } from "./classes/builders/RTINumericLiteralBuilder";
+import { RTIStringBuilder } from "./classes/builders/RTIStringBuilder";
+import { RTIStringLiteralBuilder } from "./classes/builders/RTIStringLiteralBuilder";
+import { RTIUnionBuilder } from "./classes/builders/RTIUnionBuilder";
 import { RTIClass } from "./classes/RTIClass";
-import { AllowedInUnion, RTIUnion } from "./classes/RTIUnion";
+import { AllowedInUnion } from "./classes/RTIUnion";
 import { RTIValidator, TRTIValidatorArgs } from "./RTIValidator";
 import { RTIT } from "./types/api-types";
 import assert from "./utils/Assert";
@@ -16,8 +17,28 @@ type AssertValidReturn<T extends ValidatedArguments> = {
 };
 type StripFirstUnderscore<key> = key extends `_${infer rest}` ? rest : key;
 
-export class RTI<T extends RTIT.Schema> {
-  constructor(private readonly schema: T) {}
+export class RTI<T extends RTIT.SchemaArg> {
+
+  private readonly schema: RTIT.SchemaArgToSchema<T>;
+  
+  constructor(schemaArg: T) {
+    this.schema = this.convertToSchema(schemaArg);
+  }
+
+  private convertToSchema(arg: T): RTIT.SchemaArgToSchema<T> {
+    const schema: Partial<RTIT.SchemaArgToSchema<T>> =  {};
+    MUtils.entries(arg).forEach(([_key, value]) => {
+      //@ts-ignore
+      const key: keyof RTIT.SchemaArgToSchema<T> = _key;
+      if (value instanceof RTIClass) {
+        //@ts-ignore
+        schema[key] = value;
+      } else {
+        schema[key] = value.lock();
+      }
+    })
+    return schema as RTIT.SchemaArgToSchema<T>;
+  }
 
   private static stripFirstUnderscore<T extends ValidatedArguments>(
     key: keyof T
@@ -42,7 +63,7 @@ export class RTI<T extends RTIT.Schema> {
     return returnVal as AssertValidReturn<Args>;
   }
 
-  static create<T extends RTIT.Schema>(obj: T) {
+  static create<T extends RTIT.SchemaArg>(obj: T) {
     return new RTI(obj);
   }
 
@@ -56,32 +77,35 @@ export class RTI<T extends RTIT.Schema> {
 
 export namespace RTI {
   export class Validated<T extends RTI<any>> {
-    readonly values: Readonly<RTIT.ConvertToInterface<T>>;
+    readonly values: Readonly<RTIT.Interface<T>>;
 
     public constructor(args: TRTIValidatorArgs) {
       this.values = RTIValidator.validate(args);
     }
   }
 
-  export const string = () => RTIString.required();
+  export const string = () => RTIStringBuilder.required();
   export const stringLiteral = <T extends string>(...args: T[]) =>
-    RTIStringLiteral.required(...args);
-  export const number = () => RTINumber.required();
+    RTIStringLiteralBuilder.required(...args);
+  export const number = () => RTINumberBuilder.required();
   export const numericLiteral = <T extends number>(...args: T[]) =>
-    RTINumericLiteral.required(...args);
-  export const boolean = () => RTIBool.required();
-  export const union = <T extends AllowedInUnion[]>(...args: T): RTIUnion<false, T[number]> =>
-    RTIUnion.required(...args);
-  
+    RTINumericLiteralBuilder.required(...args);
+  export const boolean = () => RTIBoolBuilder.required();
+  export const union = <T extends AllowedInUnion[]>(
+    ...args: T
+  ): RTIUnionBuilder<false, T[number]> => RTIUnionBuilder.required(...args);
+
   export const optional = {
-    string: () => RTIString.optional(),
+    string: () => RTIStringBuilder.optional(),
     stringLiteral: <T extends string>(...values: T[]) =>
-      RTIStringLiteral.optional(...values),
-    number: () => RTINumber.optional(),
+      RTIStringLiteralBuilder.optional(...values),
+    number: () => RTINumberBuilder.optional(),
     numericLiteral: <T extends number>(...values: T[]) =>
-      RTINumericLiteral.optional(...values),
-    boolean: () => RTIBool.optional(),
-    union: <T extends AllowedInUnion[]>(...args: T): RTIUnion<true, T[number]> => RTIUnion.optional(...args),
+      RTINumericLiteralBuilder.optional(...values),
+    boolean: () => RTIBoolBuilder.optional(),
+    union: <T extends AllowedInUnion[]>(
+      ...args: T
+    ): RTIUnionBuilder<true, T[number]> => RTIUnionBuilder.optional(...args),
   };
 }
 

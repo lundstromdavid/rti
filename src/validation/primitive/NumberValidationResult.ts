@@ -1,4 +1,4 @@
-import { RTINumberRules } from "../../classes/primitive/RTINumber";
+import { RTINumberCriteria } from "../../classes/primitive/RTINumber";
 import { RTIT } from "../../types/api-types";
 
 import { isNull } from "../../utils/NullCheck";
@@ -15,7 +15,7 @@ export class NumberValidationResult implements RTIT.INumberValidation {
 
   private confirmedValue: number;
 
-  public constructor(value: any, private readonly rules: RTINumberRules) {
+  public constructor(value: any, private readonly rules: RTINumberCriteria) {
     const {
       passedBaseTest,
       customValidationPassed,

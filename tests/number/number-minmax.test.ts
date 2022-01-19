@@ -12,7 +12,7 @@ describe("RTI number min max test", () => {
 			positive: optional.number().min(500)
 		});
 
-		const validate = (rti: RTIT.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.Interface<typeof Example>) => () => Example.validate(rti); 
 		
 		// Negative
 		expect(validate({
@@ -67,7 +67,7 @@ describe("RTI number min max test", () => {
 			positive: optional.number().max(500)
 		});
 
-		const validate = (rti: RTIT.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.Interface<typeof Example>) => () => Example.validate(rti); 
 		
 		// Negative
 		expect(validate({

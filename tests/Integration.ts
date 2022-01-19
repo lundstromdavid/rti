@@ -13,7 +13,7 @@ const User = RTI.create({
 
 type TUser = typeof User;
 type ValidatedUser = RTI.Validated<TUser>;
-type IUser = RTIT.ConvertToInterface<TUser>;
+type IUser = RTIT.Interface<TUser>;
 
 const mockNetworkData: IUser = {
 	id: "this is not an id",

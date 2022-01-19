@@ -1,4 +1,4 @@
-import { RTIStringProps } from "../../classes/primitive/RTIString";
+import { RTIStringCriteria } from "../../classes/primitive/RTIString";
 
 import { RTI } from "../../RTI";
 import { RTIT } from "../../types/api-types";
@@ -17,7 +17,7 @@ export class StringValidationResult implements RTIT.IStringValidation {
 
   private confirmedValue: string;
 
-  public constructor(value: any, private readonly args: RTIStringProps) {
+  public constructor(value: any, private readonly args: RTIStringCriteria) {
     const { passedBaseTest, customValidationPassed, typeCheck } =
       new PrimitiveValidator<string>(value, "string", args.customValidation);
 

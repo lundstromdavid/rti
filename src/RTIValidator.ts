@@ -11,7 +11,7 @@ export type TRTIValidatorArgs = {
 export class RTIValidator {
   public static validate<T extends RTI<any>>(
     args: TRTIValidatorArgs
-  ): Readonly<RTIT.ConvertToInterface<T>> {
+  ): Readonly<RTIT.Interface<T>> {
     const { schema, valuesToValidate } = args;
 
     if (typeof valuesToValidate !== "object") {
