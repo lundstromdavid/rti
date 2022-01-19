@@ -39,7 +39,7 @@ describe("RTI numeric literal tests", () => {
 
 	});
 
-	test("Non-numbers values not allowed", () => {
+	test("Non-number values not allowed", () => {
 
 		expect(() => RTI.create({
 			numLiteral: numericLiteral(5, "" as any)

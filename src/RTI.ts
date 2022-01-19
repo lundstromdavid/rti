@@ -7,7 +7,7 @@ import { RTIUnionBuilder } from "./classes/builders/RTIUnionBuilder";
 import { RTIClass } from "./classes/RTIClass";
 import { AllowedInUnion } from "./classes/RTIUnion";
 import { RTIValidator, TRTIValidatorArgs } from "./RTIValidator";
-import { RTIT } from "./types/api-types";
+import { RTIMap, RTIT } from "./types/api-types";
 import assert from "./utils/Assert";
 import { MUtils } from "./utils/MUtils";
 
@@ -19,17 +19,17 @@ type StripFirstUnderscore<key> = key extends `_${infer rest}` ? rest : key;
 
 export class RTI<T extends RTIT.SchemaArg> {
 
-  private readonly schema: RTIT.SchemaArgToSchema<T>;
+  private readonly schema: RTIMap.SchemaArgToSchema<T>;
   
   constructor(schemaArg: T) {
     this.schema = this.convertToSchema(schemaArg);
   }
 
-  private convertToSchema(arg: T): RTIT.SchemaArgToSchema<T> {
-    const schema: Partial<RTIT.SchemaArgToSchema<T>> =  {};
+  private convertToSchema(arg: T): RTIMap.SchemaArgToSchema<T> {
+    const schema: Partial<RTIMap.SchemaArgToSchema<T>> =  {};
     MUtils.entries(arg).forEach(([_key, value]) => {
       //@ts-ignore
-      const key: keyof RTIT.SchemaArgToSchema<T> = _key;
+      const key: keyof RTIMap.SchemaArgToSchema<T> = _key;
       if (value instanceof RTIClass) {
         //@ts-ignore
         schema[key] = value;
@@ -37,7 +37,7 @@ export class RTI<T extends RTIT.SchemaArg> {
         schema[key] = value.lock();
       }
     })
-    return schema as RTIT.SchemaArgToSchema<T>;
+    return schema as RTIMap.SchemaArgToSchema<T>;
   }
 
   private static stripFirstUnderscore<T extends ValidatedArguments>(

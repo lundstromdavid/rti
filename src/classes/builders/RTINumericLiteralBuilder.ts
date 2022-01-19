@@ -17,11 +17,11 @@ export class RTINumericLiteralBuilder<
   }
 
   static required<T extends number>(...allowedValues: T[]) {
-    return new RTINumericLiteral<false, T>(false, ...allowedValues);
+    return new RTINumericLiteralBuilder<false, T>(false, ...allowedValues);
   }
 
   static optional<T extends number>(...allowedValues: T[]) {
-    return new RTINumericLiteral<true, T>(true, ...allowedValues);
+    return new RTINumericLiteralBuilder<true, T>(true, ...allowedValues);
   }
 
   private confirmOnlyNumbers() {
