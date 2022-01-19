@@ -24,8 +24,18 @@ type _TStringBuilder<
     max: number
   ): TStringBuilder<Optional, Used | Length>;
   exactLength(length: number): TStringBuilder<Optional, Used | Length>;
-  includesAll(values: string | string[]): TStringBuilder<Optional, Used>;
-  includesSome(values: string | string[]): TStringBuilder<Optional, Used>;
+  includesAll(
+    values: string | string[]
+  ): TStringBuilder<Optional, Used | "includesAll">;
+  includesAllCaseInsensitive(
+    values: string | string[]
+  ): TStringBuilder<Optional, Used | "includesAllCaseInsensitive">;
+  includesSome(
+    values: string | string[]
+  ): TStringBuilder<Optional, Used | "includesSome">;
+  includesSomeCaseInsensitive(
+    values: string | string[]
+  ): TStringBuilder<Optional, Used | "includesAllCaseInsensitive">;
 };
 
 interface IStringBuilder<Optional extends boolean>
@@ -82,33 +92,27 @@ export class RTIStringBuilder<Optional extends boolean>
     ValidationHelper.assertMinHigherThanMax(minLength, maxLength);
   }
 
-  public includesAll(
-    values: string | string[],
-    mode: RTIT.Case = RTIT.Case.sensitive
-  ): TStringBuilder<Optional> {
-    switch (mode) {
-      case RTIT.Case.sensitive:
-        this.criteria.includesAllCaseSensitive = MUtils.asArray(values);
-        break;
-      case RTIT.Case.insensitive:
-        this.criteria.includesAllCaseInsensitive = MUtils.asArray(values);
-        break;
-    }
+  public includesAll(values: string | string[]): TStringBuilder<Optional> {
+    this.criteria.includesAllCaseSensitive = MUtils.asArray(values);
     return this;
   }
 
-  public includesSome(
-    values: string | string[],
-    mode: RTIT.Case = RTIT.Case.sensitive
+  public includesAllCaseInsensitive(
+    values: string | string[]
   ): TStringBuilder<Optional> {
-    switch (mode) {
-      case RTIT.Case.sensitive:
-        this.criteria.includesSomeCaseSensitive = MUtils.asArray(values);
-        break;
-      case RTIT.Case.insensitive:
-        this.criteria.includesSomeCaseInsensitive = MUtils.asArray(values);
-        break;
-    }
+    this.criteria.includesAllCaseInsensitive = MUtils.asArray(values);
+    return this;
+  }
+
+  public includesSome(values: string | string[]): TStringBuilder<Optional> {
+    this.criteria.includesSomeCaseSensitive = MUtils.asArray(values);
+    return this;
+  }
+
+  public includesSomeCaseInsensitive(
+    values: string | string[]
+  ): TStringBuilder<Optional> {
+    this.criteria.includesSomeCaseInsensitive = MUtils.asArray(values);
     return this;
   }
 

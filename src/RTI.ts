@@ -100,7 +100,7 @@ export namespace RTI {
   }
 
   export function boolean() {
-    RTIBoolBuilder.required();
+    return RTIBoolBuilder.required();
   }
 
   export function union<T extends AllowedInUnion[]>(

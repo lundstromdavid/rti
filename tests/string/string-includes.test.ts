@@ -6,53 +6,42 @@ describe("RTI string includes functionality", () => {
     const shouldInclude = ["some", "test", "words"];
 
     const rti = RTI.create({
-      testStringImplicit: string().includesAll(shouldInclude),
-      testStringExplicit: string().includesAll(
-        shouldInclude,
-        RTIT.Case.sensitive
-      ),
+      testString: string().includesAll(shouldInclude),
     });
 
     expect(() =>
       rti.validate({
-        testStringImplicit: "some test word",
-        testStringExplicit: "some test word",
+        testString: "some test word",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "some words",
-        testStringExplicit: "some words",
+        testString: "some words",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "some tEst words",
-        testStringExplicit: "some tEst words",
+        testString: "some tEst words",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "soMetestwords",
-        testStringExplicit: "soMetestwords",
+        testString: "soMetestwords",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "some test words",
-        testStringExplicit: "some test words",
+        testString: "some test words",
       })
     ).not.toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "sometestwords",
-        testStringExplicit: "sometestwords",
+        testString: "sometestwords",
       })
     ).not.toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "testsomewords",
-        testStringExplicit: "testsomewords",
+        testString: "testsomewords",
       })
     ).not.toThrow();
   });
@@ -61,7 +50,7 @@ describe("RTI string includes functionality", () => {
     const shouldInclude = ["some", "test", "words"];
 
     const rti = RTI.create({
-      testString: string().includesAll(shouldInclude, RTIT.Case.insensitive),
+      testString: string().includesAllCaseInsensitive(shouldInclude),
     });
 
     expect(() =>
