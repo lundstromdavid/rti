@@ -1,3 +1,5 @@
+import assert from "../../utils/Assert";
+import { RTIClass } from "../RTIClass";
 import { AllowedInUnion, RTIUnion } from "../RTIUnion";
 import { RTIBuilder } from "./RTIBuilder";
 
@@ -13,6 +15,7 @@ export class RTIUnionBuilder<
   ) {
     super();
     this.unionValues = unionValues;
+    this.assertValidValues();
   }
 
   static optional<T extends AllowedInUnion>(...unionValues: T[]) {
@@ -20,6 +23,13 @@ export class RTIUnionBuilder<
   }
   static required<T extends AllowedInUnion>(...unionValues: T[]) {
     return new RTIUnionBuilder(false, ...unionValues);
+  }
+
+  private assertValidValues() {
+    this.unionValues.forEach(
+      (val) => assert(val instanceof RTIClass && !(val instanceof RTIUnion)),
+      "Only non union RTI classes allowed"
+    );
   }
 
   // Ugly casts :(

@@ -29,7 +29,6 @@ const validated = User.validate(mockNetworkData);
 
 function test(_user: ValidatedUser) {
 	const {user} = RTI.assertValid({_user});
-	
 }
 
 

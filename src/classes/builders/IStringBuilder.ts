@@ -31,7 +31,7 @@ type _TStringBuilder<
   ): TStringBuilder<Optional, Used | "includesSome">;
   includesSomeCaseInsensitive(
     values: string | string[]
-  ): TStringBuilder<Optional, Used | "includesAllCaseInsensitive">;
+  ): TStringBuilder<Optional, Used | "includesSomeCaseInsensitive">;
 };
 
 export interface IStringBuilder<Optional extends boolean>

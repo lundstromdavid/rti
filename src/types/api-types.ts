@@ -116,13 +116,17 @@ export namespace RTIT {
   }
 
   export interface IBooleanValidation extends IBaseValidation<boolean> {}
-
+  
   export interface INumericLiteralValidation extends IBaseValidation<number> {
     valueAllowed: CriteriaValidation;
   }
-
+  
   export interface IStringLiteralValidation extends IBaseValidation<string> {
     valueAllowed: CriteriaValidation;
+  }
+
+  export interface IUnionValidation {
+    passed: boolean;
   }
 
   export enum CriteriaValidation {
