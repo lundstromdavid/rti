@@ -14,5 +14,5 @@ The code is currently very messy and a lot of refactoring will need to be made t
 
 - publish it to NPM, with Typescript support
 - learn, understand and use Semver
-- understand how licensing works and use the appropiate license for the project
+- understand how licensing works and use the appropriate license for the project
 - write and analyse tests and test-coverage
