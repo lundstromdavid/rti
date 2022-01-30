@@ -1,5 +1,7 @@
 # Runtime Interface (RTI) for Typescript/Javascript
 
+(name will be changed as I've learned that there exists something called a RTI connector)
+
 I wanted my TypeScript-interfaces to persist in runtime so that I could (for example) validate data received from the client. Then I thought I might as well make it so that you can put more restrictions on the fields except for data-types, like min length, max length and more.
 
 This will support custom field-types as well (GUID, phonenumber, email, etc). Support will also be added to for the user to write their own types by simply extending the classes.
