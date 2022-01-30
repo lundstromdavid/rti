@@ -26,10 +26,15 @@ export class RTIUnionBuilder<
   }
 
   private assertValidValues() {
-    this.unionValues.forEach(
-      (val) => assert(val instanceof RTIClass && !(val instanceof RTIUnion)),
-      "Only non union RTI classes allowed"
-    );
+    this.unionValues.forEach((val) => {
+      const isClass = val instanceof RTIClass && !(val instanceof RTIUnion);
+      const isBuilder =
+        val instanceof RTIBuilder && !(val instanceof RTIUnionBuilder);
+      assert(
+        isClass || isBuilder,
+        "Only non union RTI values allowed in a union"
+      );
+    }, "Only non union RTI classes allowed");
   }
 
   // Ugly casts :(

@@ -47,7 +47,9 @@ export namespace RTIMap {
     >]: T[key] extends RTIBuilder<any, infer Class> ? Class : never;
   };
 
-  export type RTIClassToPrimitive<T> = T extends RTIString<any>
+  export type RTIClassToPrimitive<T> = T extends RTIBuilder<any, infer Class>
+    ? RTIClassToPrimitive<Class>
+    : T extends RTIString<any>
     ? string
     : T extends RTIStringLiteral<any, infer Strings>
     ? Strings
@@ -76,9 +78,15 @@ export namespace RTIT {
 
   type _Interface<S extends Schema> = Omit<
     {
-      [key in keyof S as Filter.OnlyRequired<S, key>]: RTIMap.RTIClassToPrimitive<S[key]>;
+      [key in keyof S as Filter.OnlyRequired<
+        S,
+        key
+      >]: RTIMap.RTIClassToPrimitive<S[key]>;
     } & {
-      [key in keyof S as Filter.OnlyOptional<S, key>]?: RTIMap.RTIClassToPrimitive<S[key]>;
+      [key in keyof S as Filter.OnlyOptional<
+        S,
+        key
+      >]?: RTIMap.RTIClassToPrimitive<S[key]>;
     },
     ""
   >;
@@ -116,11 +124,11 @@ export namespace RTIT {
   }
 
   export interface IBooleanValidation extends IBaseValidation<boolean> {}
-  
+
   export interface INumericLiteralValidation extends IBaseValidation<number> {
     valueAllowed: CriteriaValidation;
   }
-  
+
   export interface IStringLiteralValidation extends IBaseValidation<string> {
     valueAllowed: CriteriaValidation;
   }

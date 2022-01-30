@@ -1,10 +1,16 @@
 import assert from "../utils/Assert";
 import { UnionValidationResult } from "../validation/UnionValidationResult";
 import { ValidationTypes } from "../validation/ValidationHelper";
+import { RTIBuilder } from "./builders/RTIBuilder";
 import { RTIClass } from "./RTIClass";
 
-type AllExceptUnion = Exclude<ValidationTypes.All, UnionValidationResult<any>>;
-export type AllowedInUnion = RTIClass<AllExceptUnion, any>;
+export type AllExceptUnion = Exclude<
+  ValidationTypes.All,
+  UnionValidationResult<any>
+>;
+export type AllowedInUnion =
+  | RTIClass<AllExceptUnion, any>
+  | RTIBuilder<any, RTIClass<AllExceptUnion, any>>;
 
 export class RTIUnion<
   Optional extends boolean,

@@ -32,7 +32,7 @@ export namespace ValidationTypes {
     | NumberValidationResult
     | NumericLiteralValidationResult
     | BooleanValidationResult
-    | UnionValidationResult;
+    | UnionValidationResult<any>;
 
   export type Result<
     T extends TPrimitive,
@@ -49,7 +49,7 @@ export namespace ValidationTypes {
     ? BooleanValidationResult
     : never;
 
-/*   export type ToResult<T extends RTIObject<any>> = T extends RTIString
+  /*   export type ToResult<T extends RTIObject<any>> = T extends RTIString
     ? StringValidationResult
     : //
     T extends RTIStringLiteral<any>
