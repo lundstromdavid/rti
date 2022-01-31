@@ -1,57 +1,47 @@
-import { RTI } from "../../src/RTI";
+import { RTI, string } from "../../src/RTI";
+import { RTIT } from "../../src/types/api-types";
 
 describe("RTI string includes functionality", () => {
   test("includes all - case sensitive", () => {
     const shouldInclude = ["some", "test", "words"];
 
     const rti = RTI.create({
-      testStringImplicit: RTI.string.includesAll(shouldInclude),
-      testStringExplicit: RTI.string.includesAll(
-        shouldInclude,
-        RTI.Case.sensitive
-      ),
+      testString: string().includesAll(shouldInclude),
     });
 
     expect(() =>
       rti.validate({
-        testStringImplicit: "some test word",
-        testStringExplicit: "some test word",
+        testString: "some test word",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "some words",
-        testStringExplicit: "some words",
+        testString: "some words",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "some tEst words",
-        testStringExplicit: "some tEst words",
+        testString: "some tEst words",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "soMetestwords",
-        testStringExplicit: "soMetestwords",
+        testString: "soMetestwords",
       })
     ).toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "some test words",
-        testStringExplicit: "some test words",
+        testString: "some test words",
       })
     ).not.toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "sometestwords",
-        testStringExplicit: "sometestwords",
+        testString: "sometestwords",
       })
     ).not.toThrow();
     expect(() =>
       rti.validate({
-        testStringImplicit: "testsomewords",
-        testStringExplicit: "testsomewords",
+        testString: "testsomewords",
       })
     ).not.toThrow();
   });
@@ -60,7 +50,7 @@ describe("RTI string includes functionality", () => {
     const shouldInclude = ["some", "test", "words"];
 
     const rti = RTI.create({
-      testString: RTI.string.includesAll(shouldInclude, RTI.Case.insensitive),
+      testString: string().includesAllCaseInsensitive(shouldInclude),
     });
 
     expect(() =>

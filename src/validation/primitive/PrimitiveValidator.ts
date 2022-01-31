@@ -1,8 +1,6 @@
-import {
-  CriteriaValidation,
-  TTypeCheck as TTypeCheck,
-} from "../ValidationTypes";
-import { TPrimitive, TPrimitiveToString } from "../../types/Primitive";
+import { RTIT } from "../../types/api-types";
+import { TPrimitive, TPrimitiveToString } from "../../types/local-types";
+
 
 export type TCustomValidationCallback<T extends TPrimitive> = (
   value: T
@@ -10,8 +8,8 @@ export type TCustomValidationCallback<T extends TPrimitive> = (
 
 export class PrimitiveValidator<T extends TPrimitive> {
   readonly passedBaseTest: boolean = false;
-  readonly typeCheck: TTypeCheck<T>;
-  readonly customValidationPassed: CriteriaValidation = CriteriaValidation.unchecked;
+  readonly typeCheck: RTIT.TypeCheck<T>;
+  readonly customValidationPassed: RTIT.CriteriaValidation = RTIT.CriteriaValidation.unchecked;
 
   constructor(
     object: any,
@@ -27,10 +25,10 @@ export class PrimitiveValidator<T extends TPrimitive> {
 
     if (this.typeCheck.passed) {
       if (customValidation) {
-        this.customValidationPassed = CriteriaValidation.fromBool(customValidation(object as T));
-        this.passedBaseTest = this.customValidationPassed === CriteriaValidation.passed;
+        this.customValidationPassed = RTIT.CriteriaValidation.fromBool(customValidation(object as T));
+        this.passedBaseTest = this.customValidationPassed === RTIT.CriteriaValidation.passed;
       } else {
-        this.customValidationPassed = CriteriaValidation.noRestriction;
+        this.customValidationPassed = RTIT.CriteriaValidation.noRestriction;
         this.passedBaseTest = true;
       }
     }

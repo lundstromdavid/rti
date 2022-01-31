@@ -1,5 +1,5 @@
-import { RTI } from "../../src/RTI";
-const {optional} = RTI;
+import { optional, RTI } from "../../src/RTI";
+import { RTIT } from "../../src/types/api-types";
 
 
 describe("RTI number min max test", () => {
@@ -7,12 +7,12 @@ describe("RTI number min max test", () => {
 	test("Min value", () => {
 
 		const Example = RTI.create({
-			negative: optional.number.min(-50),
-			zero: optional.number.min(0),
-			positive: optional.number.min(500)
+			negative: optional.number().min(-50),
+			zero: optional.number().min(0),
+			positive: optional.number().min(500)
 		});
 
-		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.Interface<typeof Example>) => () => Example.validate(rti); 
 		
 		// Negative
 		expect(validate({
@@ -62,12 +62,12 @@ describe("RTI number min max test", () => {
 	test("Max value", () => {
 
 		const Example = RTI.create({
-			negative: optional.number.max(-50),
-			zero: optional.number.max(0),
-			positive: optional.number.max(500)
+			negative: optional.number().max(-50),
+			zero: optional.number().max(0),
+			positive: optional.number().max(500)
 		});
 
-		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.Interface<typeof Example>) => () => Example.validate(rti); 
 		
 		// Negative
 		expect(validate({

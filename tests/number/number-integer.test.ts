@@ -1,4 +1,5 @@
 import { number, RTI } from "../../src/RTI";
+import { RTIT } from "../../src/types/api-types";
 
 
 
@@ -9,7 +10,7 @@ describe("RTI number min max test", () => {
 			integer: number().integer()
 		});
 	
-		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.Interface<typeof Example>) => () => Example.validate(rti); 
 	
 		expect(validate({
 			integer: 0

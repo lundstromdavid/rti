@@ -1,4 +1,5 @@
-import { numericLiteral, optional, RTI } from "../../src/RTI";
+import { numericLiteral, RTI } from "../../src/RTI";
+import { RTIT } from "../../src/types/api-types";
 
 
 describe("RTI numeric literal tests", () => {
@@ -8,10 +9,9 @@ describe("RTI numeric literal tests", () => {
 
 		const Example = RTI.create({
 			numLiteral: numericLiteral(20, 25.3, -28.2),
-			optionalTest: optional().numericLiteral(5)
 		});
 
-		const validate = (rti: RTI.ConvertToInterface<typeof Example>) => () => Example.validate(rti); 
+		const validate = (rti: RTIT.Interface<typeof Example>) => () => Example.validate(rti); 
 
 		expect(validate({numLiteral: 20})).not.toThrow();
 		expect(validate({numLiteral: 25.3})).not.toThrow();
@@ -39,7 +39,7 @@ describe("RTI numeric literal tests", () => {
 
 	});
 
-	test("Non-numbers values not allowed", () => {
+	test("Non-number values not allowed", () => {
 
 		expect(() => RTI.create({
 			numLiteral: numericLiteral(5, "" as any)
@@ -54,11 +54,11 @@ describe("RTI numeric literal tests", () => {
 		})).toThrow();
 
 		expect(() => RTI.create({
-			numLiteral: numericLiteral(10, undefined)
+			numLiteral: numericLiteral(10, undefined as any)
 		})).toThrow();
 
 		expect(() => RTI.create({
-			numLiteral: numericLiteral(10, null)
+			numLiteral: numericLiteral(10, null as any)
 		})).toThrow();
 
 	});
