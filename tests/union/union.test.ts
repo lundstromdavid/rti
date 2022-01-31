@@ -63,14 +63,17 @@ describe("Union tests", () => {
   test("Disallow nested unions", () => {
     expect(() =>
       RTI.create({
-        union: union(union() as any, union() as any),
+        union: union(
+          union(string(), number()) as any,
+          union(boolean(), stringLiteral("this doesnt matter")) as any
+        ),
       })
     ).toThrow();
   });
   test("Disallow only one value", () => {
-    // ToDo: Disallow this in the typesystem
     expect(() =>
       RTI.create({
+        //@ts-ignore
         union: union(string()),
       })
     ).toThrow();

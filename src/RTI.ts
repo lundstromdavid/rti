@@ -3,7 +3,7 @@ import { IStringBuilder } from "./classes/builders/IStringBuilder";
 import { RTIBoolBuilder } from "./classes/builders/RTIBoolBuilder";
 import { RTINumberBuilder } from "./classes/builders/RTINumberBuilder";
 import { RTINumericLiteralBuilder } from "./classes/builders/RTINumericLiteralBuilder";
-import { RTIStringBuilder} from "./classes/builders/RTIStringBuilder";
+import { RTIStringBuilder } from "./classes/builders/RTIStringBuilder";
 import { RTIStringLiteralBuilder } from "./classes/builders/RTIStringLiteralBuilder";
 import { RTIUnionBuilder } from "./classes/builders/RTIUnionBuilder";
 import { RTIClass } from "./classes/RTIClass";
@@ -105,9 +105,9 @@ export namespace RTI {
     return RTIBoolBuilder.required();
   }
 
-  export function union<T extends AllowedInUnion[]>(
-    ...args: T
-  ): RTIUnionBuilder<false, T[number]> {
+  export function union<
+    T extends [AllowedInUnion, AllowedInUnion, ...AllowedInUnion[]]
+  >(...args: T): RTIUnionBuilder<false, T[number]> {
     return RTIUnionBuilder.required(...args);
   }
 
