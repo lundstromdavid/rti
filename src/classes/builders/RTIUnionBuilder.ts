@@ -26,6 +26,10 @@ export class RTIUnionBuilder<
   }
 
   private assertValidValues() {
+    assert(
+      this.unionValues.length > 1,
+      "Unions with only one value does not make any sense"
+    );
     this.unionValues.forEach((val) => {
       const isClass = val instanceof RTIClass && !(val instanceof RTIUnion);
       const isBuilder =
