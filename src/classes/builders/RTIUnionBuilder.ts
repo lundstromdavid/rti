@@ -40,9 +40,9 @@ export class RTIUnionBuilder<
   // Ugly casts :(
   lock(): RTIUnion<Optional, T> {
     if (this.optional) {
-      return RTIUnion.optional() as RTIUnion<Optional, T>;
+      return RTIUnion.optional(...this.unionValues) as RTIUnion<Optional, T>;
     } else {
-      return RTIUnion.required() as RTIUnion<Optional, T>;
+      return RTIUnion.required(...this.unionValues) as RTIUnion<Optional, T>;
     }
   }
 }

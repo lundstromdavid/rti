@@ -26,10 +26,10 @@ export class RTIUnion<
     this.unionValues = unionValues;
   }
 
-  static optional<T extends RTIClass<AllExceptUnion>>(...unionValues: T[]) {
+  static optional<T extends AllowedInUnion>(...unionValues: T[]) {
     return new RTIUnion(true, ...unionValues);
   }
-  static required<T extends RTIClass<AllExceptUnion>>(...unionValues: T[]) {
+  static required<T extends AllowedInUnion>(...unionValues: T[]) {
     return new RTIUnion(false, ...unionValues);
   }
 
